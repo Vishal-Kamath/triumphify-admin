@@ -9,8 +9,8 @@ const OrderVariationSale: FC<{
   startDate: Date;
   endDate: Date;
 }> = ({ id, startDate, endDate }) => {
-  if (!id || !startDate || !endDate) return null;
   const { data: variations } = useVariationSale(id, startDate, endDate);
+  if (!id || !startDate || !endDate) return null;
   return (
     <table className="border-collapse select-none overflow-x-auto border-1 text-sm max-lg:block [&>*>*>*]:border-1 [&>*>*]:border-1 [&>*]:border-1">
       <thead className="bg-slate-50 [&>*>*]:px-4 [&>*>*]:py-3 [&>*>*]:font-medium">

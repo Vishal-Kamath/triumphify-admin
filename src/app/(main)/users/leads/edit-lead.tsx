@@ -162,7 +162,7 @@ const EditLead: FC<Lead> = (leads) => {
         <SheetHeader>
           <SheetTitle>Edit Lead</SheetTitle>
           <SheetDescription>
-            Make changes to your leads here. Click update when you're done.
+            Make changes to your leads here. Click update when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
