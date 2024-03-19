@@ -61,6 +61,7 @@ const EditLead: FC<Lead> = (leads) => {
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [dateOpen, setDateOpen] = useState(false);
 
   const { data: employees, isLoading, refetch } = useEmployees();
 
@@ -281,7 +282,7 @@ const EditLead: FC<Lead> = (leads) => {
               name="status"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel>Role</FormLabel>
+                  <FormLabel>Status</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -289,7 +290,7 @@ const EditLead: FC<Lead> = (leads) => {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Roles" />
+                        <SelectValue placeholder="Status" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -307,8 +308,8 @@ const EditLead: FC<Lead> = (leads) => {
               name="last_contacted"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="text-black">Date of birth</FormLabel>
-                  <Popover>
+                  <FormLabel className="text-black">Last Contacted</FormLabel>
+                  <Popover open={dateOpen} onOpenChange={setDateOpen}>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
@@ -348,7 +349,7 @@ const EditLead: FC<Lead> = (leads) => {
                         }
                         ISOWeek
                       />
-                      <div className="w-full px-3 pb-3">
+                      <div className="w-full flex gap-3 px-3 pb-3">
                         <Button
                           type="button"
                           variant="ghost"
@@ -356,6 +357,14 @@ const EditLead: FC<Lead> = (leads) => {
                           className="w-full"
                         >
                           Clear Input
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="default"
+                          onClick={() => setDateOpen(false)}
+                          className="w-full"
+                        >
+                          Apply
                         </Button>
                       </div>
                     </PopoverContent>
