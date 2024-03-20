@@ -18,7 +18,7 @@ const Accordian: FC<{
 
   return (
     <div className="mx-auto flex w-full flex-col overflow-hidden border-b-1 border-slate-200">
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full gap-2 items-center justify-between">
         <input
           placeholder="Title"
           maxLength={100}
@@ -30,19 +30,19 @@ const Accordian: FC<{
         <button
           type="button"
           onClick={deletefn}
-          className="flex aspect-square h-full items-center justify-center border-none text-gray-600 outline-none hover:text-red-500"
+          className="flex aspect-square h-full items-center p-2 hover:bg-red-50 rounded-md justify-center border-none text-gray-600 outline-none hover:text-red-500"
         >
           <Trash2 className="h-4 w-4 shrink-0" />
         </button>
         <button
           type="button"
           onClick={() => setOpen((open) => !open)}
-          className="flex aspect-square h-full items-center justify-center border-none outline-none"
+          className="flex aspect-square h-full items-center p-2 hover:bg-slate-50 rounded-md justify-center border-none outline-none"
         >
           <ChevronDownIcon
             className={cn(
               "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
-              open ? "rotate-180" : "",
+              open ? "-rotate-180" : ""
             )}
           />
         </button>
@@ -55,7 +55,7 @@ const Accordian: FC<{
           placeholder="Description"
           className={cn(
             "max-h-[10rem] min-h-[7.5rem] w-full border-none p-2 text-xs outline-none",
-            !open ? "hidden" : "",
+            !open ? "hidden" : ""
           )}
         />
       </div>
@@ -136,12 +136,12 @@ const ProductAccordianForm: FC<{
             <button
               type="button"
               onClick={() => setTempOpen((open) => !open)}
-              className="flex aspect-square h-full items-center justify-center border-none outline-none"
+              className="flex aspect-square h-full items-center p-2 hover:bg-slate-50 rounded-md justify-center border-none outline-none"
             >
               <ChevronDownIcon
                 className={cn(
                   "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
-                  tempOpen ? "rotate-180" : "",
+                  tempOpen ? "-rotate-180" : ""
                 )}
               />
             </button>
@@ -154,7 +154,7 @@ const ProductAccordianForm: FC<{
               placeholder="Description"
               className={cn(
                 "max-h-[10rem] min-h-[7.5rem] w-full border-none p-2 text-xs outline-none",
-                !tempOpen ? "hidden" : "",
+                !tempOpen ? "hidden" : ""
               )}
             />
           </div>

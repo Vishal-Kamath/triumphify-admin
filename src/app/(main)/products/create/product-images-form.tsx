@@ -33,12 +33,12 @@ const ProductImagesFormComponent: FC<{
           {productImages.map((image, index) => (
             <CarouselItem
               key={index}
-              className="relative cursor-grab active:cursor-grabbing md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+              className="relative cursor-grab active:cursor-grabbing sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
             >
               <Image
                 src={image}
                 alt="product image"
-                className="h-full w-full rounded-lg border-1 object-contain"
+                className="h-full w-full aspect-[4/5] rounded-lg border-1 object-contain"
                 width={500}
                 height={500}
               />
@@ -51,7 +51,7 @@ const ProductImagesFormComponent: FC<{
               </button>
             </CarouselItem>
           ))}
-          <CarouselItem className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+          <CarouselItem className="sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
             <div className="relative flex aspect-[4/5] w-full flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 text-slate-300 hover:border-fuchsia-500 hover:bg-fuchsia-50 hover:text-fuchsia-500">
               <UploadCloud className="h-20 w-20" />
               <span className="text-lg font-semibold">
