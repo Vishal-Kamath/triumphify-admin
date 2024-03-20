@@ -5,19 +5,21 @@ import { MoveLeft } from "lucide-react";
 import Link from "next/link";
 import { FC } from "react";
 import AccountUserDetails from "./user-details";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import AccountOrdersPlaced from "./orders-placed";
 import AccountUserReviews from "./user-reviews";
 
 const UserDetailsPage: FC = () => {
   const id = useParams()["id"] as string;
+  const redirect = useSearchParams().get("redirect") as string | undefined;
+
   return (
     <div className="h-full w-full bg-white pb-24 pt-6 lg:pt-9">
       <main className="mx-auto flex max-w-4xl flex-col gap-6 px-6 lg:gap-9">
         <div className="flex flex-col gap-4">
           <div className="flex justify-between gap-3 max-md:flex-col">
             <div className="flex items-center gap-6 text-slate-600">
-              <Link href="/users/accounts">
+              <Link href={redirect ? redirect : "/users/accounts"}>
                 <MoveLeft className="h-6 w-6 " />
               </Link>
               <h2 className="text-lg font-semibold leading-none">

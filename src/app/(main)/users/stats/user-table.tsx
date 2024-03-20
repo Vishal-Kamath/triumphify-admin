@@ -118,7 +118,7 @@ const columns: ColumnDef<User>[] = [
     cell: ({ row }) => (
       <div className="flex">
         <Link
-          href={`/users/stats/${row.getValue("id")}`}
+          href={`/users/accounts/${row.getValue("id")}?redirect=${encodeURIComponent("/users/stats")}`}
           className={cn(buttonVariants({ variant: "ghost" }))}
         >
           <MoreHorizontal className="h-4 w-4" />

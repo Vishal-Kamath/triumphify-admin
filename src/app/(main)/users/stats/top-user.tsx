@@ -30,7 +30,7 @@ const TopUsers: FC = () => {
       <div className="flex w-full flex-col">
         {filterUsersPaginated?.map((user) => (
           <Link
-            href={`/users/stats/${user.user_id}`}
+            href={`/users/accounts/${user.user_id}?redirect=${encodeURIComponent("/users/stats")}`}
             key={user.user_id}
             className="flex items-center gap-3 border-b-1 border-slate-300 p-3 last:border-b-0 hover:bg-slate-50"
           >
