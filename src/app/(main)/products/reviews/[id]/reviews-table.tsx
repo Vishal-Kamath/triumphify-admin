@@ -47,32 +47,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DataTableFacetedFilter } from "@/components/data-table/data-table-faceted-filter";
-
-const colors = [
-  "bg-red-100 text-red-800",
-  "bg-purple-100 text-purple-800",
-  "bg-green-100 text-green-800",
-  "bg-yellow-100 text-yellow-800",
-  "bg-sky-100 text-sky-800",
-];
-export const AvatarElement: FC<{
-  image: string | null;
-  username?: string | null;
-  className?: string;
-}> = ({ image, username, className }) => (
-  <Avatar className={className}>
-    <AvatarImage src={image || ""} />
-    <AvatarFallback
-      className={cn(colors[(username?.length || 5) % 5], "font-semibold")}
-    >
-      {username
-        ?.split(" ")
-        .map((val) => val[0])
-        .slice(0, 2)
-        .join("")}
-    </AvatarFallback>
-  </Avatar>
-);
+import AvatarElement from "@/components/misc/avatar-element";
 
 const ProductReviewsTable: FC<{
   startDate: Date;
