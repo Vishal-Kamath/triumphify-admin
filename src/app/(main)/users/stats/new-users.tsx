@@ -10,6 +10,8 @@ import {
   Title,
   Tooltip,
   Legend,
+  ChartOptions,
+  ChartData,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { dateFormater } from "@/utils/dateFormater";
@@ -22,7 +24,7 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 );
 
 const NewUsers: FC = () => {
@@ -38,19 +40,38 @@ const NewUsers: FC = () => {
   const { data: newUsers, isLoading, refetch } = useNewUser(month, year);
   if (!newUsers) return null;
 
-  const options = {
+  const options: ChartOptions<"bar"> = {
     responsive: true,
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Date",
+        },
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+        },
+        title: {
+          display: true,
+          text: "New Users",
+        },
+      },
+    },
   };
 
-  const labels = newUsers?.map((data) => dateFormater(new Date(data.date)));
+  const labels = newUsers?.map((data) => new Date(data.date).getDate());
 
-  const data = {
+  const data: ChartData<"bar"> = {
     labels,
     datasets: [
       {
         label: "Monthly new commers",
         data: newUsers?.map((data) => data.count),
         backgroundColor: "rgba(53, 162, 235, 0.5)",
+        minBarLength: 4,
       },
     ],
   };
@@ -83,7 +104,9 @@ const NewUsers: FC = () => {
           <ChevronsUpDown className="h-4 w-4" />
         </SelectMonth>
       </div>
-      <Bar options={options} data={data} />
+      <div className="w-full max-w-[30rem] mx-auto">
+        <Bar redraw={true} updateMode="resize" options={options} data={data} />
+      </div>
     </div>
   );
 };
