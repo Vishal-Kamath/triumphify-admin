@@ -102,6 +102,7 @@ const columns: ColumnDef<Lead>[] = [
   {
     header: "Created At",
     accessorKey: "created_at",
+    id: "created_at",
     cell: ({ row }) => dateFormater(new Date(row.getValue("created_at"))),
   },
   {
@@ -144,6 +145,12 @@ const LeadsTable: FC = () => {
       sorting,
       columnFilters,
       columnVisibility,
+    },
+    initialState: {
+      columnVisibility: {
+        created_at: false,
+        updated_at: false,
+      },
     },
   });
 

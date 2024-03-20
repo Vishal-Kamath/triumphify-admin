@@ -19,6 +19,7 @@ import {
   Star,
   BarChart3,
   UserSearch,
+  Ticket,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -72,6 +73,11 @@ const navSections: NavSectionType[] = [
         label: "Leads",
         href: "/employees/leads",
         icon: UserSearch,
+      },
+      {
+        label: "Tickets",
+        href: "/employees/tickets",
+        icon: Ticket,
       },
       {
         label: "Logs",
