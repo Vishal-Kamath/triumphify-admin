@@ -14,3 +14,14 @@ interface Ticket {
   created_at: Date;
   updated_at: Date | null;
 }
+
+interface TicketChat {
+  id: string;
+  content: string;
+  type: "user" | "employee";
+  created_at: Date;
+  user_or_employee_id: string;
+  user: string | null;
+  employee: string | null;
+  seen: boolean | null;
+}

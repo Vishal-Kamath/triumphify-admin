@@ -43,3 +43,25 @@ export const useTicket = (id: string) =>
 
 export const invalidateTicket = (id: string) =>
   queryClient.invalidateQueries({ queryKey: ["tickets", id] });
+
+
+const getTicketChats = (id: string): Promise<TicketChat[] & { type: string }> =>
+  axios
+    .get<{ data: TicketChat[] & { type: string } }>(
+      `${process.env.ENDPOINT}/api/tickets/${id}/chat`,
+      { withCredentials: true }
+    )
+    .then((res) => res.data.data)
+    .catch((err) => err.response.data);
+
+export const useTicketChats = (id: string) =>
+  useQuery({
+    queryKey: ["tickets", "chats", id],
+    queryFn: () => getTicketChats(id),
+    retry: 0,
+    staleTime: 1000 * 10,
+    refetchInterval: 1000 * 10,
+  });
+
+export const invalidateTicketChats = (id: string) =>
+  queryClient.invalidateQueries({ queryKey: ["tickets", "chats", id] });

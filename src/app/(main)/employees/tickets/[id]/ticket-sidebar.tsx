@@ -9,10 +9,10 @@ import TicketAssignedToDropdown from "./ticket-assigned-dropdown";
 import { ChevronDown } from "lucide-react";
 
 const TicketSidebar: FC = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
-    <div className="fixed top-16 max-md:left-0 md:sticky max-md:pb-3 max-md:pt-2 px-6 bg-white max-md:border-b-1 max-md:border-slate-300 max-md:shadow-sm md:max-w-sm w-full md:top-0 flex flex-col gap-5">
+    <div className="fixed top-16 z-10 max-md:left-0 md:sticky max-md:pb-3 max-md:pt-2 px-6 bg-white max-md:border-b-1 max-md:border-slate-300 max-md:shadow-sm md:max-w-sm w-full md:top-0 flex flex-col gap-5">
       <div className="flex gap-6 w-full items-center">
         <Link
           href="/employees/tickets"
