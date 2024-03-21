@@ -21,12 +21,11 @@ import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import DataTableToolbar from "@/components/data-table/data-table-toolbar";
 import DataTableExtract from "@/components/data-table/data-table-extract";
-import { Badge } from "@/components/ui/badge";
-import { DataTableFacetedFilter } from "@/components/data-table/data-table-faceted-filter";
 import { useTickets } from "@/lib/ticket";
 import AvatarElement from "@/components/misc/avatar-element";
 import Link from "next/link";
 import { ExternalLink, MoreHorizontal } from "lucide-react";
+import TicketStatusDropdown from "./[id]/ticket-status-dropdown";
 
 const statusStyles = {
   pending:
@@ -97,13 +96,7 @@ const columns: ColumnDef<Ticket>[] = [
     accessorKey: "status",
     cell: ({ row }) => {
       return (
-        <Badge
-          className={
-            row.original.status ? statusStyles[row.original.status] : ""
-          }
-        >
-          {row.original.status}
-        </Badge>
+        <TicketStatusDropdown id={row.original.id} ticket={row.original} all />
       );
     },
   },

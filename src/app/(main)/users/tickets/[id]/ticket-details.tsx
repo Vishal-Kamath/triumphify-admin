@@ -6,6 +6,7 @@ import { dateFormater } from "@/utils/dateFormater";
 import Link from "next/link";
 import { notFound, useParams, usePathname } from "next/navigation";
 import { FC } from "react";
+import TicketStatusDropdown from "./ticket-status-dropdown";
 
 const TicketDetails: FC = () => {
   const id = useParams()["id"] as string;
@@ -34,7 +35,10 @@ const TicketDetails: FC = () => {
   return (
     <>
       <div className="flex flex-col gap-1">
-        <h3 className="font-medium text-2xl">{ticket.title}</h3>
+        <div className="w-full flex items-start justify-between gap-6">
+          <h3 className="font-medium text-2xl">{ticket.title}</h3>
+          <TicketStatusDropdown ticket={ticket} id={id} />
+        </div>
         <div className="flex gap-1 text-sm mt-2 items-center">
           <span className="text-slate-500">Created by</span>
           <Link
