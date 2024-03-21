@@ -162,7 +162,7 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex h-full min-h-screen flex-col bg-slate-50">
+    <div className="flex h-full min-h-screen flex-col bg-white">
       <header className="fixed left-0 top-0 z-[999] flex h-14 w-full items-center justify-start gap-3 border-b-1 border-slate-300 bg-white px-4 shadow-sm">
         <button
           onClick={() => setOpen((open) => !open)}
