@@ -59,6 +59,11 @@ const navSections: NavSectionType[] = [
         href: "/users/stats",
         icon: BarChart3,
       },
+      {
+        label: "Tickets",
+        href: "/users/tickets",
+        icon: Ticket,
+      },
     ],
   },
   {
