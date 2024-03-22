@@ -30,14 +30,6 @@ import Link from "next/link";
 import { ExternalLink, MoreHorizontal } from "lucide-react";
 import TicketStatusDropdown from "./[id]/ticket-status-dropdown";
 
-const statusStyles = {
-  pending:
-    "bg-yellow-50 border-1 border-yellow-500 hover:bg-yellow-50 text-yellow-600",
-  completed:
-    "bg-green-50 border-1 border-green-500 hover:bg-green-50 text-green-600",
-  failed: "bg-red-50 border-1 border-red-500 hover:bg-red-50 text-red-600",
-};
-
 const columns: ColumnDef<Ticket>[] = [
   {
     header: ({ column }) => {
