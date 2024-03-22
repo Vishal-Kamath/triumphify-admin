@@ -59,8 +59,8 @@ export const useTicketChats = (id: string) =>
     queryKey: ["tickets", "chats", id],
     queryFn: () => getTicketChats(id),
     retry: 0,
-    staleTime: 1000 * 10,
-    refetchInterval: 1000 * 10,
+    staleTime: 1000 * 3,
+    refetchInterval: 1000 * 3,
   });
 
 export const invalidateTicketChats = (id: string) =>
