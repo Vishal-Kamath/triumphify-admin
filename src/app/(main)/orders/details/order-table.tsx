@@ -27,6 +27,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { FC, useState } from "react";
 import { RxCaretSort } from "react-icons/rx";
+import DataTableExtract from "@/components/data-table/data-table-extract";
+import { DataTableFacetedFilter } from "@/components/data-table/data-table-faceted-filter";
 
 const columns: ColumnDef<Order>[] = [
   {
@@ -42,6 +44,7 @@ const columns: ColumnDef<Order>[] = [
       );
     },
     accessorKey: "product_name",
+    id: "Product Name",
     cell: ({ row }) => (
       <div className="flex gap-3 items-center">
         <Image
@@ -68,31 +71,43 @@ const columns: ColumnDef<Order>[] = [
   },
   {
     header: "Product Price",
+    id: "Product Price",
     accessorKey: "product_variation_price",
   },
   {
     header: "Quantity",
+    id: "Quantity",
     accessorKey: "product_quantity",
   },
   {
     header: "Discount",
+    id: "Discount",
     accessorKey: "product_variation_discount_final_price",
   },
   {
     header: "Total Price",
+    id: "Total Price",
     accessorKey: "product_variation_final_price",
   },
   {
     header: "Status",
+    id: "Status",
     accessorKey: "status",
+    cell: ({ row }) => (
+      <span className="text-xs text-nowrap capitalize px-2 py-1 border-1 border-neutral-500 rounded-full text-neutral-800 bg-neutral-50">
+        {row.original.status}
+      </span>
+    ),
   },
   {
     header: "Created At",
+    id: "Created At",
     accessorKey: "created_at",
     cell: ({ row }) => dateFormater(new Date(row.getValue("created_at"))),
   },
   {
     header: "Updated At",
+    id: "Updated At",
     accessorKey: "updated_at",
     cell: ({ row }) =>
       row.getValue("updated_at")
@@ -150,8 +165,30 @@ const OrderTable: FC = () => {
       <DataTableToolbar
         table={table}
         searchUsing="product_name"
+        dataTableExtract={
+          <DataTableExtract data={orders || []} name="orders" />
+        }
         refetch={refetch}
       />
+      <div className="flex justify-between">
+        <DataTableFacetedFilter
+          column={table.getColumn("status")}
+          options={[
+            "pending",
+            "confirmed",
+            "out for delivery",
+            "delivered",
+            "return approved",
+            "out for pickup",
+            "picked up",
+            "refunded",
+          ].map((status) => ({
+            label: status[0].toUpperCase() + status.slice(1),
+            value: status,
+          }))}
+          title="Status"
+        />
+      </div>
       <DataTable table={table} columnSpan={columns.length} />
       <DataTablePagination table={table} />
     </div>
