@@ -21,7 +21,7 @@ const TicketChatWindow: FC = () => {
 
   return (
     <div className="w-full h-full flex flex-col gap-4 relative">
-      <div className="h-full justify-end max-h-full flex flex-col-reverse gap-3 overflow-y-auto">
+      <div className="h-full max-md:pt-16 justify-end max-h-full flex flex-col-reverse gap-3 overflow-y-auto">
         {chats?.map((chat, index) => (
           <TicketChat key={chat.id} chat={chat} id={id} />
         ))}
