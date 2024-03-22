@@ -23,6 +23,7 @@ import {
 } from "@tanstack/react-table";
 import { useParams } from "next/navigation";
 import { FC, useState } from "react";
+import { RxCaretSort } from "react-icons/rx";
 
 const columns: ColumnDef<EmployeeLog>[] = [
   {
@@ -46,7 +47,17 @@ const columns: ColumnDef<EmployeeLog>[] = [
     accessorKey: "type",
   },
   {
-    header: "Created At",
+    header: ({ column }) => {
+      return (
+        <button
+          className="flex items-center gap-2 border-none bg-transparent p-0 outline-none focus:outline-none"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Created At
+          <RxCaretSort className="ml-2 h-4 w-4" />
+        </button>
+      );
+    },
     accessorKey: "created_at",
     cell: ({ row }) => dateFormater(new Date(row.getValue("created_at")), true),
   },
