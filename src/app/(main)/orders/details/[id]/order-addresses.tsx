@@ -1,17 +1,33 @@
 import { OrderDetails } from "@/@types/order";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { MoveLeft } from "lucide-react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { FC } from "react";
 
 const OrderAddressSection: FC<{ order_details?: OrderDetails }> = ({
   order_details,
 }) => {
+  const redirect = useSearchParams().get("redirect");
+
   if (!order_details) return null;
   return (
-    <div className="h-full w-full lg:max-w-xs">
-      <div className="flex h-fit w-full flex-col gap-4 lg:sticky lg:max-w-xs">
-        <div className="flex rounded-lg border-1 border-slate-200 bg-white max-sm:flex-col lg:flex-col">
+    <div className="w-full lg:max-w-sm">
+      <div className="left-0 top-0 flex w-full flex-col gap-3 pt-3 md:sticky lg:max-w-sm">
+        <Link
+          href={redirect ? redirect : `/orders/details`}
+          className={cn(
+            buttonVariants({ variant: "secondary" }),
+            "w-fit gap-3 rounded-full max-lg:hidden"
+          )}
+        >
+          <MoveLeft className="h-4 w-4" />
+          <span>Back</span>
+        </Link>
+        <div className="flex rounded-lg border-1 border-slate-200 bg-white max-md:flex-col lg:flex-col">
           {/* shipping address */}
-          <div className="flex w-full flex-col gap-3 border-b-1 border-slate-200 p-4 max-lg:sm:border-b-0 max-lg:sm:border-r-1">
+          <div className="flex w-full flex-col gap-3 border-b-1 border-slate-200 p-4 max-lg:md:border-b-0 max-lg:md:border-r-1">
             <h3 className="text-sm font-semibold text-slate-600 underline">
               Shipping Address
             </h3>
@@ -76,7 +92,7 @@ const OrderAddressSection: FC<{ order_details?: OrderDetails }> = ({
           </div>
         </div>
 
-        <Button variant="outline" className="mx-auto w-full max-w-xs">
+        <Button variant="outline" className="mx-auto w-full max-w-sm">
           Download Invoice
         </Button>
       </div>

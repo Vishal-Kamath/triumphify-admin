@@ -1,10 +1,13 @@
 import { Order } from "@/@types/order";
+import { MoveLeft } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { FC } from "react";
 
-const OrderProductSection: FC<{
-  order?: Order;
-}> = ({ order }) => {
+const OrderProductDetails: FC<{ order?: Order }> = ({ order }) => {
+  const redirect = useSearchParams().get("redirect");
+
   if (!order) return null;
 
   const variations = Object.keys(order.product_variation_combinations)
@@ -13,8 +16,18 @@ const OrderProductSection: FC<{
 
   return (
     <div className="flex w-full flex-col gap-6">
+      <div className="flex items-center justify-end gap-3 text-sm max-lg:text-xs">
+        <Link
+          href={redirect ? redirect : `/orders/history`}
+          className="mr-auto px-3 lg:hidden"
+        >
+          <MoveLeft className="h-4 w-4" />
+        </Link>
+        <span>Order id:</span>
+        <span className="rounded-sm bg-slate-50 px-2 py-1">{order.id}</span>
+      </div>
       {/* Product */}
-      <div className="flex gap-6 rounded-md border-1 border-slate-200 p-4 max-sm:flex-col lg:max-xl:flex-col">
+      <div className="flex gap-6 rounded-lg border-1 border-slate-200 p-4 max-sm:flex-col lg:max-xl:flex-col">
         <Image
           src={order.product_image || ""}
           alt={order.product_name}
@@ -54,4 +67,4 @@ const OrderProductSection: FC<{
   );
 };
 
-export default OrderProductSection;
+export default OrderProductDetails;

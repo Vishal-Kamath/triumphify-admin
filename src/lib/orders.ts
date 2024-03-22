@@ -1,4 +1,5 @@
 import { Order, OrderDetails } from "@/@types/order";
+import { queryClient } from "@/components/providers/reactquery.provider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -6,7 +7,7 @@ const getAllOrders = (): Promise<Order[] & { type: string }> =>
   axios
     .get<{ data: Order[] & { type: string } }>(
       `${process.env.ENDPOINT}/api/employee/orders`,
-      { withCredentials: true },
+      { withCredentials: true }
     )
     .then((res) => res.data.data)
     .catch((err) => err.response.data);
@@ -19,6 +20,12 @@ export const useOrders = () =>
     staleTime: 1000 * 60 * 15,
   });
 
+export const invalidateAllOrders = () => {
+  queryClient.invalidateQueries({
+    queryKey: ["orders"],
+  });
+};
+
 interface GetOrderById {
   order: Order;
   order_details: OrderDetails;
@@ -28,7 +35,7 @@ const getOrder = (orderId: string): Promise<GetOrderById & { type: string }> =>
   axios
     .get<{ data: GetOrderById & { type: string } }>(
       `${process.env.ENDPOINT}/api/employee/orders/${orderId}`,
-      { withCredentials: true },
+      { withCredentials: true }
     )
     .then((res) => res.data.data)
     .catch((err) => err.response.data);
@@ -40,6 +47,12 @@ export const useOrder = (orderId: string) =>
     retry: 0,
     staleTime: 1000 * 60 * 15,
   });
+
+export const invalidateOrder = (orderId: string) => {
+  queryClient.invalidateQueries({
+    queryKey: ["orders", orderId],
+  });
+};
 
 export interface AnalyticsListType {
   product_id: string;
