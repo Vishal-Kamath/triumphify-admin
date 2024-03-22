@@ -78,3 +78,9 @@
 .min-h-remaining {
   min-height: calc(100vh - 3.5rem);
 }
+
+@media not all and (min-width: 1024px) {
+  .max-lg\:min-h-remaining {
+    min-height: calc(100vh - 3.5rem);
+  }
+}

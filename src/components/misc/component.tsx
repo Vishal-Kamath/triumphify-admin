@@ -7,7 +7,7 @@ const TabComponent: FC<TabProps> = ({ className, children, ...props }) => {
     <div className="h-full flex min-h-remaining flex-col w-full bg-slate-50 lg:p-6 lg:pb-12">
       <main
         className={cn(
-          "flex h-full w-full flex-col gap-6 bg-white p-6 shadow-md max-lg:pb-12 lg:rounded-lg lg:border-1 lg:border-slate-200",
+          "flex h-full w-full max-lg:min-h-remaining flex-col gap-6 bg-white p-6 shadow-md max-lg:pb-12 lg:rounded-lg lg:border-1 lg:border-slate-200",
           className
         )}
         {...props}
