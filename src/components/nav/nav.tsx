@@ -22,17 +22,18 @@ import {
   Ticket,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import SignOutButton from "./signout";
 import UserAccount from "./account";
 import Image from "next/image";
 import NavSection from "./nav-section";
+import { IoLogoGoogle } from "react-icons/io";
+import { IconType } from "react-icons/lib";
 
 export interface NavElementType {
   label: string;
   href: string;
-  icon: LucideIcon;
+  icon: LucideIcon | IconType;
 }
 
 export interface NavSectionType {
@@ -158,6 +159,16 @@ const navSections: NavSectionType[] = [
         label: "Sub Banner",
         href: "/banners/sub",
         icon: ImageLucide,
+      },
+    ],
+  },
+  {
+    label: "Config",
+    elements: [
+      {
+        label: "Google Tag Manager",
+        href: "/config/gtm",
+        icon: IoLogoGoogle,
       },
     ],
   },
