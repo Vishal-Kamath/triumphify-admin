@@ -28,6 +28,7 @@ import UserAccount from "./account";
 import Image from "next/image";
 import NavSection from "./nav-section";
 import { IoLogoGoogle } from "react-icons/io";
+import { MdOutlinePayments } from "react-icons/md";
 import { IconType } from "react-icons/lib";
 
 export interface NavElementType {
@@ -169,6 +170,11 @@ const navSections: NavSectionType[] = [
         label: "Google Tag Manager",
         href: "/config/gtm",
         icon: IoLogoGoogle,
+      },
+      {
+        label: "Payment",
+        href: "/config/payment",
+        icon: MdOutlinePayments,
       },
     ],
   },
