@@ -8,6 +8,7 @@ import OrderProductDetails from "./order-details";
 import OrderAddressSection from "./order-addresses";
 import OrderStatus from "./order-status";
 import OrderGroupDetails from "./order-group-details";
+import CancelOrderForm from "./cancel-order";
 
 const OrderDetails: FC = () => {
   const id = useParams()["id"] as string;
@@ -32,6 +33,7 @@ const OrderDetails: FC = () => {
           <OrderProductDetails order={data.order} />
           <OrderStatus order={data.order} />
           <OrderGroupDetails all_orders={data.all_orders} />
+          <CancelOrderForm order_id={data.order.id} />
         </div>
       </main>
     </Suspense>
