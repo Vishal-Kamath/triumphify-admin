@@ -27,7 +27,7 @@ const TopUsers: FC = () => {
   return (
     <div className="flex w-full flex-col gap-6 lg:gap-9">
       <h3 className="text-lg font-medium text-slate-500">Top Users</h3>
-      <div className="flex w-full flex-col">
+      <div className="flex w-full flex-col overflow-x-auto">
         {filterUsersPaginated?.map((user) => (
           <Link
             href={`/users/accounts/${user.user_id}?redirect=${encodeURIComponent("/users/stats")}`}
@@ -39,16 +39,16 @@ const TopUsers: FC = () => {
               image={user.user_image}
               className="h-12 w-12"
             />
-            <div className="flex min-w-[20rem] max-w-xs flex-col gap-1">
+            <div className="flex sm:min-w-[20rem] max-w-xs flex-col gap-1">
               <h4 className="text-sm font-medium">{user.user_username}</h4>
               <span className="text-xs text-slate-500">{user.user_email}</span>
             </div>
-            <div>&#36;{user.total_spent || 0}</div>
+            <div className="ml-auto">&#36;{user.total_spent || 0}</div>
           </Link>
         ))}
-        {/* Pagination */}
-        <Pagination page={page} setPage={setPage} totalPages={totalPages} />
       </div>
+      {/* Pagination */}
+      <Pagination page={page} setPage={setPage} totalPages={totalPages} />
     </div>
   );
 };
