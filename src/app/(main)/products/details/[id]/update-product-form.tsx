@@ -56,7 +56,6 @@ const UpdateProductForm: FC = () => {
       form.setValue("product_accordians", product.product_accordians || []);
       form.setValue("product_images", product.product_images || []);
       setProductImages((product.product_images || []) as string[]);
-      console.log(product.category_id);
 
       form.setValue("variations", product.variations);
 

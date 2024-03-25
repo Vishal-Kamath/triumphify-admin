@@ -27,7 +27,7 @@ const OrderAnalyticsDateRange: FC<{
               variant={"outline"}
               className={cn(
                 "w-[300px] justify-start text-left font-normal",
-                !startDate || (!endDate && "text-muted-foreground"),
+                !startDate || (!endDate && "text-muted-foreground")
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
@@ -56,7 +56,6 @@ const OrderAnalyticsDateRange: FC<{
                 to: endDate,
               }}
               onSelect={(date) => {
-                console.log(date);
                 date?.from && setStartDate(date.from);
                 date?.to && setEndDate(date.to);
               }}

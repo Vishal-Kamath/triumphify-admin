@@ -351,7 +351,6 @@ const ProductReviewsTable: FC<{
                   to: endDate,
                 }}
                 onSelect={(date) => {
-                  console.log(date);
                   date?.from && setStartDate(date.from);
                   date?.to && setEndDate(date.to);
                 }}
