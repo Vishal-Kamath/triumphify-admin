@@ -87,6 +87,7 @@ const ProductVariationsFormComponent: FC<{
     const newVariations = variations.filter(
       (variation) => variation.key !== variantKey,
     );
+    setSelectedVariationIndex(-1);
     form.setValue("variations", newVariations);
   };
 
