@@ -46,10 +46,10 @@ const columns: ColumnDef<Order>[] = [
     accessorKey: "product_name",
     id: "Product Name",
     cell: ({ row }) => (
-      <div className="flex gap-3 items-center">
+      <div className="flex gap-3 min-w-[15rem] items-center">
         <Image
           src={row.original.product_image || ""}
-          alt={row.getValue("name")}
+          alt={row.original.product_name}
           className="size-14 object-contain flex-shrink-0"
           width={200}
           height={200}
@@ -103,15 +103,15 @@ const columns: ColumnDef<Order>[] = [
     header: "Created At",
     id: "Created At",
     accessorKey: "created_at",
-    cell: ({ row }) => dateFormater(new Date(row.getValue("created_at"))),
+    cell: ({ row }) => dateFormater(new Date(row.original.created_at)),
   },
   {
     header: "Updated At",
     id: "Updated At",
     accessorKey: "updated_at",
     cell: ({ row }) =>
-      row.getValue("updated_at")
-        ? dateFormater(new Date(row.getValue("updated_at")))
+      row.original.updated_at
+        ? dateFormater(new Date(row.original.updated_at))
         : "N/A",
   },
   {
@@ -164,7 +164,7 @@ const OrderTable: FC = () => {
     <div className="flex w-full flex-col gap-4">
       <DataTableToolbar
         table={table}
-        searchUsing="product_name"
+        searchUsing="Product Name"
         dataTableExtract={
           <DataTableExtract data={orders || []} name="orders" />
         }
@@ -172,7 +172,7 @@ const OrderTable: FC = () => {
       />
       <div className="flex justify-between">
         <DataTableFacetedFilter
-          column={table.getColumn("status")}
+          column={table.getColumn("Status")}
           options={[
             "pending",
             "confirmed",

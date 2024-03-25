@@ -3,9 +3,9 @@ import { queryClient } from "@/components/providers/reactquery.provider";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const getAllOrders = (): Promise<Order[] & { type: string }> =>
+const getAllOrders = (): Promise<Order[]> =>
   axios
-    .get<{ data: Order[] & { type: string } }>(
+    .get<{ data: Order[]; type: string }>(
       `${process.env.ENDPOINT}/api/employee/orders`,
       { withCredentials: true }
     )
