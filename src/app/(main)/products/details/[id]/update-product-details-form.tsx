@@ -66,8 +66,8 @@ const UpdateProductDetailsFormComponent: FC<{
               <FormControl>
                 <Select
                   value={form.watch("category_id")}
-                  // defaultValue={field.value}
-                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  onValueChange={(value) => value && field.onChange(value)}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Category" />
