@@ -3,15 +3,9 @@
 import { Input } from "@/components/ui/input";
 import { useUserOrders } from "@/lib/user";
 import { useParams } from "next/navigation";
-import { FC, useState } from "react";
+import { FC, Suspense, useState } from "react";
 import OrderComponent from "./order-component";
 import { Button } from "@/components/ui/button";
-import {
-  LuChevronLeft,
-  LuChevronRight,
-  LuChevronsLeft,
-  LuChevronsRight,
-} from "react-icons/lu";
 import { RefreshCw } from "lucide-react";
 import Pagination from "@/components/misc/pagination";
 
@@ -51,24 +45,26 @@ const AccountOrdersPlaced: FC = () => {
           </Button>
         </div>
 
-        <div className="flex flex-col gap-3">
-          {filterOrdersPaginated?.map((order) => (
-            <OrderComponent key={order.id} order={order} />
-          ))}
-          {
-            // Loading
-            isLoading && (
-              <div className="flex justify-center">
-                <RefreshCw className="h-6 w-6 animate-spin" />
+        <Suspense>
+          <div className="flex flex-col gap-3">
+            {filterOrdersPaginated?.map((order) => (
+              <OrderComponent key={order.id} order={order} />
+            ))}
+            {
+              // Loading
+              isLoading && (
+                <div className="flex justify-center">
+                  <RefreshCw className="h-6 w-6 animate-spin" />
+                </div>
+              )
+            }
+            {filterOrdersPaginated?.length === 0 && (
+              <div className="flex justify-center py-12 text-lg font-medium text-slate-500">
+                No orders found
               </div>
-            )
-          }
-          {filterOrdersPaginated?.length === 0 && (
-            <div className="flex justify-center py-12 text-lg font-medium text-slate-500">
-              No orders found
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </Suspense>
 
         {/* Pagination */}
         <Pagination page={page} setPage={setPage} totalPages={totalPages} />
