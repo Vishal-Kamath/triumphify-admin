@@ -33,7 +33,10 @@ const OrderDetails: FC = () => {
           <OrderProductDetails order={data.order} />
           <OrderStatus order={data.order} />
           <OrderGroupDetails all_orders={data.all_orders} />
-          <CancelOrderForm order_id={data.order.id} />
+          <CancelOrderForm
+            order_id={data.order.id}
+            isCancelled={data.order.cancelled}
+          />
         </div>
       </main>
     </Suspense>

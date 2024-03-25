@@ -22,7 +22,10 @@ const confirmCancel = z.object({
 });
 type ConfirmCancel = z.infer<typeof confirmCancel>;
 
-const CancelOrderForm: FC<{ order_id: string }> = ({ order_id }) => {
+const CancelOrderForm: FC<{ order_id: string; isCancelled: boolean }> = ({
+  order_id,
+  isCancelled,
+}) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const form = useForm<ConfirmCancel>({
@@ -67,7 +70,7 @@ const CancelOrderForm: FC<{ order_id: string }> = ({ order_id }) => {
       });
   }
 
-  return (
+  return isCancelled ? null : (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
