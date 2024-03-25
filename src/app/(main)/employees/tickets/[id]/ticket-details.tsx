@@ -53,6 +53,15 @@ const TicketDetails: FC = () => {
         </span>
       </div>
 
+      {ticket.type === "request" ? (
+        <Link
+          className="text-blue-500 text-xs underline hover:text-blue-700"
+          href={`/orders/details/${ticket.link}?redirect=${encodeURIComponent(pathname)}`}
+        >
+          View Order
+        </Link>
+      ) : null}
+
       <p className="text-sm text-justify text-slate-600">
         {ticket.description}
       </p>
