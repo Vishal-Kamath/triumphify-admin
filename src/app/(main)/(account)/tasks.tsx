@@ -268,7 +268,7 @@ const UserTasksSection: FC = () => {
         <div className="flex w-full flex-col gap-4">
           <DataTableToolbar
             table={table}
-            searchUsing="name"
+            searchUsing="user_username"
             refetch={refetch}
           />
           <DataTable table={table} columnSpan={columns.length} />
