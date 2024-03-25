@@ -8,6 +8,7 @@ import AccountUserDetails from "./user-details";
 import { useParams, useSearchParams } from "next/navigation";
 import AccountOrdersPlaced from "./orders-placed";
 import AccountUserReviews from "./user-reviews";
+import AccountUserStats from "./user-stats";
 
 const UserDetailsPage: FC = () => {
   const id = useParams()["id"] as string;
@@ -33,6 +34,8 @@ const UserDetailsPage: FC = () => {
           <Separator />
         </div>
         <AccountUserDetails />
+
+        <AccountUserStats />
         <Separator />
         <AccountOrdersPlaced />
         <Separator />
