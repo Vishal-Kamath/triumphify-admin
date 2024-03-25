@@ -156,6 +156,7 @@ const CreateProductForm: FC = () => {
       >
         <ProductImagesFormComponent
           productImages={productImages}
+          form={form}
           deleteImage={deleteImage}
           handleFileChange={handleFileChange}
         />

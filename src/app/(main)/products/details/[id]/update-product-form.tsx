@@ -181,6 +181,7 @@ const UpdateProductForm: FC = () => {
       >
         <UpdateProductImagesFormComponent
           productImages={productImages}
+          form={form}
           deleteImage={deleteImage}
           handleFileChange={handleFileChange}
         />

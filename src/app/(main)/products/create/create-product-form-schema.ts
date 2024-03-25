@@ -38,30 +38,32 @@ export const createProductSchema = z.object({
         .trim()
         .max(500)
         .refine((data) => !!data.trim(), "Field is required"),
-    }),
+    })
   ),
 
   // images
-  product_images: z.array(
-    z
-      .object({
-        name: z
-          .string()
-          .trim()
-          .refine((data) => !!data.trim(), "Field is required"),
-        size: z.number(),
-        type: z
-          .string()
-          .trim()
-          .refine((data) => !!data.trim(), "Field is required"),
-        lastModified: z.number(),
-      })
-      .refine((value) => value.size < MAX_FILE_SIZE, "File size is too large")
-      .refine(
-        (value) => ACCEPTED_IMAGE_TYPES.includes(value.type),
-        "Invalid file type",
-      ),
-  ),
+  product_images: z
+    .array(
+      z
+        .object({
+          name: z
+            .string()
+            .trim()
+            .refine((data) => !!data.trim(), "Field is required"),
+          size: z.number(),
+          type: z
+            .string()
+            .trim()
+            .refine((data) => !!data.trim(), "Field is required"),
+          lastModified: z.number(),
+        })
+        .refine((value) => value.size < MAX_FILE_SIZE, "File size is too large")
+        .refine(
+          (value) => ACCEPTED_IMAGE_TYPES.includes(value.type),
+          "Invalid file type"
+        )
+    )
+    .refine((value) => value.length > 0, "Field is required"),
 
   // variations
   variations: z.array(
@@ -75,7 +77,7 @@ export const createProductSchema = z.object({
       quantity: z.number(),
       discount: z.number(),
       price: z.number(),
-    }),
+    })
   ),
 
   // meta data
