@@ -13,7 +13,7 @@ const CreateProductShowcase: FC = () => {
       <div className="flex flex-col gap-6 max-md:pt-6 bg-white">
         <div className="flex items-center px-3 gap-3">
           <Link
-            href={`/products/showcase`}
+            href={`/products/details`}
             className={buttonVariants({ variant: "ghost" })}
           >
             <MoveLeft />

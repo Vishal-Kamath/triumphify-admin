@@ -12,7 +12,6 @@ import {
   FileText,
   FileClock,
   Image as ImageLucide,
-  GalleryVertical,
   Menu,
   X,
   FileSearch,
@@ -115,16 +114,6 @@ const navSections: NavSectionType[] = [
         label: "Attibutes",
         href: "/products/attributes",
         icon: FileText,
-      },
-      {
-        label: "Showcase",
-        href: "/products/showcase",
-        icon: GalleryVertical,
-      },
-      {
-        label: "Reviews",
-        href: "/products/reviews",
-        icon: Star,
       },
       {
         label: "Create",

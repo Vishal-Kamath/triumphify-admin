@@ -139,6 +139,8 @@ const OrderTable: FC = () => {
 
   const { data: orders, isLoading, refetch } = useOrders();
 
+  const [cancelled, setCancelled] = useState(false);
+
   const table = useReactTable({
     data: orders || [],
     columns,

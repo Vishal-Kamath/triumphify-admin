@@ -27,7 +27,7 @@ const ProductReviewPage: FC = () => {
     <main className="flex h-full min-h-full w-full gap-9 flex-col bg-white p-6">
       <div className="flex items-center gap-2">
         <Link
-          href="/products/reviews"
+          href="/products/details"
           className={cn(buttonVariants({ variant: "ghost" }))}
         >
           <MoveLeft className="h-6 w-6" />
