@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { MoveLeft, PencilLine } from "lucide-react";
 import ProductVariations from "./product-variations";
+import ProductReport from "./product-report";
 
 const ProductsDisplaySection: FC = () => {
   const id = useParams()["id"] as string;
@@ -48,6 +49,7 @@ const ProductsDisplaySection: FC = () => {
           <span>Edit</span>
         </Link>
       </div>
+      <ProductReport />
       <ProductVariations product={product} />
       <div className="flex items-start gap-9 max-lg:flex-col">
         <ProductImages name={product.name} images={product.product_images} />
