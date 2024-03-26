@@ -11,6 +11,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { MoveLeft, PencilLine } from "lucide-react";
 import ProductVariations from "./product-variations";
 import ProductReport from "./product-report";
+import { Separator } from "@/components/ui/separator";
 
 const ProductsDisplaySection: FC = () => {
   const id = useParams()["id"] as string;
@@ -23,7 +24,7 @@ const ProductsDisplaySection: FC = () => {
 
   if (isLoading) return <div>Loading...</div>;
   return product ? (
-    <div className="max-w-6xl w-full mx-auto flex flex-col gap-6">
+    <div className="max-w-6xl w-full mx-auto flex flex-col gap-12">
       <div className="flex justify-between items-center gap-6">
         <Link
           className={cn(
@@ -50,6 +51,11 @@ const ProductsDisplaySection: FC = () => {
         </Link>
       </div>
       <ProductReport type="history" />
+
+      <div className="flex flex-col gap-2">
+        <h2 className="text-xl font-semibold">Product Details</h2>
+        <Separator />
+      </div>
       <ProductVariations product={product} />
       <div className="flex items-start gap-9 max-lg:flex-col">
         <ProductImages name={product.name} images={product.product_images} />

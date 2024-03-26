@@ -11,14 +11,14 @@ const ProductReport: FC<{ type: "history" | "cancelled" }> = () => {
   return (
     <div className="flex flex-col gap-12">
       <div className="flex flex-col gap-9">
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
           <h2 className="text-xl font-semibold">Sales History</h2>
           <Separator />
         </div>
         <ProductVariationSales type="history" />
       </div>
       <div className="flex flex-col gap-9">
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
           <h2 className="text-xl font-semibold">Cancelled Sales History</h2>
           <Separator />
         </div>

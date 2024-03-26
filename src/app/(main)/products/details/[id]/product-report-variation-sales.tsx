@@ -48,53 +48,49 @@ const OrderAnalyticsDateRange: FC<{
   setEndDate: Dispatch<SetStateAction<Date>>;
 }> = ({ startDate, setStartDate, endDate, setEndDate }) => {
   return (
-    <div className="flex w-full justify-end">
-      <div className={cn("grid gap-2")}>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              id="date"
-              variant={"outline"}
-              className={cn(
-                "w-[300px] justify-start text-left font-normal",
-                !startDate || (!endDate && "text-muted-foreground")
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {startDate ? (
-                endDate ? (
-                  <>
-                    {format(startDate, "LLL dd, y")} -{" "}
-                    {format(endDate, "LLL dd, y")}
-                  </>
-                ) : (
-                  format(startDate, "LLL dd, y")
-                )
-              ) : (
-                <span>Pick a date</span>
-              )}
-              <RxCaretSort className="ml-auto h-4 w-4 text-slate-600" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              initialFocus
-              mode="range"
-              defaultMonth={startDate}
-              selected={{
-                from: startDate,
-                to: endDate,
-              }}
-              onSelect={(date) => {
-                date?.from && setStartDate(date.from);
-                date?.to && setEndDate(date.to);
-              }}
-              numberOfMonths={2}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
-    </div>
+    <Popover>
+      <PopoverTrigger className="w-full md:min-w-[300px]" asChild>
+        <Button
+          id="date"
+          variant={"outline"}
+          className={cn(
+            "w-full md:min-w-[300px] justify-start text-left font-normal",
+            !startDate || (!endDate && "text-muted-foreground")
+          )}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {startDate ? (
+            endDate ? (
+              <>
+                {format(startDate, "LLL dd, y")} -{" "}
+                {format(endDate, "LLL dd, y")}
+              </>
+            ) : (
+              format(startDate, "LLL dd, y")
+            )
+          ) : (
+            <span>Pick a date</span>
+          )}
+          <RxCaretSort className="ml-auto h-4 w-4 text-slate-600" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          initialFocus
+          mode="range"
+          defaultMonth={startDate}
+          selected={{
+            from: startDate,
+            to: endDate,
+          }}
+          onSelect={(date) => {
+            date?.from && setStartDate(date.from);
+            date?.to && setEndDate(date.to);
+          }}
+          numberOfMonths={2}
+        />
+      </PopoverContent>
+    </Popover>
   );
 };
 
@@ -255,7 +251,7 @@ const ProductVariationSales: FC<{
   >("Total Sales");
 
   return (
-    <div className="flex w-full gap-6">
+    <div className="flex max-lg:flex-col w-full gap-6">
       <div className="flex w-full h-full flex-col gap-6">
         <OrderVariationSale
           type={type}
@@ -265,7 +261,7 @@ const ProductVariationSales: FC<{
         />
       </div>
       <div className="flex w-full justify-end h-full flex-col gap-6">
-        <div className="flex gap-3">
+        <div className="flex gap-3 max-md:flex-col">
           <Select
             value={reportFor}
             onValueChange={(val) =>

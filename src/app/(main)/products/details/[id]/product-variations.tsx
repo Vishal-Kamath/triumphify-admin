@@ -4,7 +4,7 @@ import { FC } from "react";
 
 const ProductVariations: FC<{ product: ProductDetails }> = ({ product }) => {
   return (
-    <div className="flex w-full flex-col mb-6">
+    <div className="flex w-full flex-col">
       <div className="rounded-t-md w-full border-1 border-b-0 bg-slate-50 p-3 font-medium">
         Product Variations
       </div>
