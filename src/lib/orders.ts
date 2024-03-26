@@ -90,21 +90,27 @@ interface VariationSaleType {
 [];
 const getVariationSale = (
   id: string,
+  type: "history" | "cancelled" | "returned",
   start: Date,
-  end: Date,
+  end: Date
 ): Promise<VariationSaleType[] & { type: string }> =>
   axios
     .get<{ data: VariationSaleType[] & { type: string } }>(
-      `${process.env.ENDPOINT}/api/orders/analytics/${id}/variations?start=${start}&end=${end}`,
-      { withCredentials: true },
+      `${process.env.ENDPOINT}/api/orders/analytics/${id}/variations?start=${start}&end=${end}&type=${type}`,
+      { withCredentials: true }
     )
     .then((res) => res.data.data)
     .catch((err) => err.response.data);
 
-export const useVariationSale = (id: string, start: Date, end: Date) =>
+export const useVariationSale = (
+  id: string,
+  type: "history" | "cancelled" | "returned",
+  start: Date,
+  end: Date
+) =>
   useQuery({
-    queryKey: ["analytics", id, "variations", start, end],
-    queryFn: () => getVariationSale(id, start, end),
+    queryKey: ["analytics", id, "variations", type, start, end],
+    queryFn: () => getVariationSale(id, type, start, end),
     retry: 0,
     staleTime: 1000 * 60 * 15,
   });

@@ -100,11 +100,13 @@ const OrderAnalyticsDateRange: FC<{
 
 const OrderVariationSale: FC<{
   id: string;
+  type: "history" | "cancelled" | "returned";
   startDate: Date;
   endDate: Date;
-}> = ({ id, startDate, endDate }) => {
+}> = ({ id, type, startDate, endDate }) => {
   const { data: variations, isLoading: isVariationLoading } = useVariationSale(
     id,
+    type,
     startDate,
     endDate
   );
@@ -167,12 +169,14 @@ const OrderVariationSale: FC<{
 
 const OrderVariationSaleBar: FC<{
   id: string;
+  type: "history" | "cancelled" | "returned";
   reportFor: "Total Units Sold" | "Total Discounted Price" | "Total Sales";
   startDate: Date;
   endDate: Date;
-}> = ({ id, reportFor, startDate, endDate }) => {
+}> = ({ id, type, reportFor, startDate, endDate }) => {
   const { data: variations, isLoading: isVariationLoading } = useVariationSale(
     id,
+    type,
     startDate,
     endDate
   );
@@ -235,7 +239,9 @@ const OrderVariationSaleBar: FC<{
   return <Bar options={options} data={data} />;
 };
 
-const ProductVariationSales: FC = () => {
+const ProductVariationSales: FC<{
+  type: "history" | "cancelled" | "returned";
+}> = ({ type }) => {
   const id = useParams()["id"] as string;
   const { data: product } = useProduct(id);
 
@@ -251,7 +257,12 @@ const ProductVariationSales: FC = () => {
   return (
     <div className="flex w-full gap-6">
       <div className="flex w-full h-full flex-col gap-6">
-        <OrderVariationSale id={id} startDate={startDate} endDate={endDate} />
+        <OrderVariationSale
+          type={type}
+          id={id}
+          startDate={startDate}
+          endDate={endDate}
+        />
       </div>
       <div className="flex w-full justify-end h-full flex-col gap-6">
         <div className="flex gap-3">
@@ -287,6 +298,7 @@ const ProductVariationSales: FC = () => {
         </div>
         <OrderVariationSaleBar
           id={id}
+          type={type}
           reportFor={reportFor}
           startDate={startDate}
           endDate={endDate}

@@ -49,7 +49,7 @@ const ProductsDisplaySection: FC = () => {
           <span>Edit</span>
         </Link>
       </div>
-      <ProductReport />
+      <ProductReport type="history" />
       <ProductVariations product={product} />
       <div className="flex items-start gap-9 max-lg:flex-col">
         <ProductImages name={product.name} images={product.product_images} />
