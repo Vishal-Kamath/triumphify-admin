@@ -1,4 +1,5 @@
 import { ProductDetails } from "@/@types/product";
+import { cn } from "@/lib/utils";
 import { FC } from "react";
 
 const ProductVariations: FC<{ product: ProductDetails }> = ({ product }) => {
@@ -28,7 +29,16 @@ const ProductVariations: FC<{ product: ProductDetails }> = ({ product }) => {
                   {attrValues.join(" - ")}
                 </td>
 
-                <td className="w-full min-w-[15rem] text-center p-3 text-xs">
+                <td
+                  className={cn(
+                    "w-full min-w-[15rem] font-medium text-center p-3 text-sm",
+                    variation.quantity < 10
+                      ? "text-red-600"
+                      : variation.quantity < 30
+                        ? "text-yellow-500"
+                        : ""
+                  )}
+                >
                   {variation.quantity}
                 </td>
                 <td className="w-full min-w-[15rem] text-center p-3 text-xs">
