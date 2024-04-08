@@ -209,7 +209,7 @@ const ProductReviewsTable: FC<{
             <Select
               value={row.original.status}
               onValueChange={(value: "pending" | "approved" | "rejected") =>
-                setStatus(value, row.original.id)
+                value && setStatus(value, row.original.id)
               }
             >
               <SelectTrigger>

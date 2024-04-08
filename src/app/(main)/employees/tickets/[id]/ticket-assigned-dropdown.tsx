@@ -104,7 +104,7 @@ const TicketAssignedToDropdown: FC = () => {
               <FormLabel className="text-slate-700">Assigned to</FormLabel>
               <FormControl>
                 <Select
-                  onValueChange={onSelect}
+                  onValueChange={(value) => value && onSelect(value)}
                   value={form.getValues("assigned") || undefined}
                   defaultValue={form.getValues("assigned") || undefined}
                 >

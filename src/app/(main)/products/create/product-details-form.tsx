@@ -63,7 +63,9 @@ const ProductDetailsFormComponent: FC<{
             <FormItem className="w-full">
               <FormLabel className="text-black">Category</FormLabel>
               <FormControl>
-                <Select onValueChange={field.onChange}>
+                <Select
+                  onValueChange={(value) => value && field.onChange(value)}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>

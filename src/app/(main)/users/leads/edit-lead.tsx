@@ -234,7 +234,7 @@ const EditLead: FC<Lead> = (leads) => {
                 <FormItem className="w-full">
                   <FormLabel>Status</FormLabel>
                   <Select
-                    onValueChange={field.onChange}
+                    onValueChange={(value) => value && field.onChange(value)}
                     defaultValue={field.value}
                     value={field.value}
                   >

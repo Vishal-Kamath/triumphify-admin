@@ -94,7 +94,7 @@ const TicketStatusDropdown: FC<{
             <FormItem className="w-full">
               <FormControl>
                 <Select
-                  onValueChange={onSelect}
+                  onValueChange={(value) => value && onSelect(value)}
                   value={form.getValues("status") || undefined}
                   defaultValue={form.getValues("status") || undefined}
                 >

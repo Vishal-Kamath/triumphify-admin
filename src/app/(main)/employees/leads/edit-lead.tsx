@@ -221,7 +221,7 @@ const EditLead: FC<Lead> = (leads) => {
                   <FormLabel className="text-black">Assigned</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(value) => value && field.onChange(value)}
                       defaultValue={field.value || undefined}
                       value={field.value || undefined}
                     >
