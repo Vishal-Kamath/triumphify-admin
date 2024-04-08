@@ -20,7 +20,7 @@ const AccountPage: FC = () => {
       <div className="flex mx-auto max-w-6xl w-full flex-col gap-9">
         <WelcomeUserSection employee={employee} />
         <Separator />
-        <div className="flex gap-9 max-lg:flex-col">
+        <div className="flex gap-9 max-lg:flex-col max-lg:items-center">
           <EmployeeDetails />
           <EmployeeTime />
         </div>
