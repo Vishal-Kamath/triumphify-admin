@@ -26,25 +26,26 @@ const EmpolyeDetails: FC = () => {
 
   return (
     <PrivilageProvider path="/employees/details/:id">
-      <TabComponent className="max-xl:max-w-lg mx-auto max-w-6xl">
-        <div className="flex w-full items-center gap-3">
-          <Link
-            href="/employees/details"
-            className={cn(buttonVariants({ variant: "ghost" }), "rounded-full")}
-          >
-            <MoveLeft />
-          </Link>
-          <h2 className="text-xl font-semibold">{employee?.username}</h2>
+      <TabComponent className="max-xl:max-w-lg mx-auto max-w-6xl flex xl:flex-row max-xl:flex-col justify-between max-xl:items-center gap-12 xl:gap-6">
+        <div className="flex max-w-lg flex-col gap-9 w-full min-w-[25rem]">
+          <div className="flex flex-col w-full items-start gap-3">
+            <h2 className="text-xl font-semibold">{employee?.username}</h2>
+            <Link
+              href="/employees/details"
+              className="text-slate-500 flex gap-2 items-center hover:text-slate-600 text-sm underline"
+            >
+              <MoveLeft className="size-4" />
+              <span>Back</span>
+            </Link>
+          </div>
+          <EmployeeDetailsForm employee={employee} />
         </div>
 
-        <div className="flex max-xl:flex-col justify-between max-xl:items-center gap-12 xl:gap-6">
-          <EmployeeDetailsForm employee={employee} />
-          <div className="flex max-w-lg flex-col gap-9 w-full min-w-[25rem]">
-            <EmployeeTime employee={employee} />
-            {me && me.role === "superadmin" ? (
-              <ActivateDeactivateEmployee employee={employee} />
-            ) : null}
-          </div>
+        <div className="flex max-w-lg flex-col gap-9 w-full min-w-[25rem]">
+          <EmployeeTime employee={employee} />
+          {me && me.role === "superadmin" ? (
+            <ActivateDeactivateEmployee employee={employee} />
+          ) : null}
         </div>
       </TabComponent>
     </PrivilageProvider>
