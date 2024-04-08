@@ -2,7 +2,7 @@
 
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { LoginFormSchema, LoginFormType } from "./form-validators";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,9 +23,11 @@ import { NotificationType } from "@/@types/notification";
 import { invalidateUserData } from "@/lib/auth";
 import Link from "next/link";
 import { invalidateAllPrivilages } from "@/lib/privilage";
+import { TimeLogContext } from "@/components/providers/time.log.provider";
 
 const LoginForm: FC<{ inline?: boolean }> = ({ inline }) => {
   const { toast } = useToast();
+  const { login } = useContext(TimeLogContext);
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
@@ -60,6 +62,7 @@ const LoginForm: FC<{ inline?: boolean }> = ({ inline }) => {
         });
         invalidateUserData();
         invalidateAllPrivilages();
+        login();
         if (!inline) return router.replace("/");
       })
       .catch((err) => {

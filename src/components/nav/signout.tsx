@@ -12,15 +12,17 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import axios from "axios";
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import { invalidateUserData } from "@/lib/auth";
 import { LogOut } from "lucide-react";
 import { invalidateAllPrivilages } from "@/lib/privilage";
+import { TimeLogContext } from "../providers/time.log.provider";
 
 const SignOutButton: FC = () => {
   const { toast } = useToast();
+  const { logout } = useContext(TimeLogContext);
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
@@ -38,6 +40,7 @@ const SignOutButton: FC = () => {
         });
         invalidateUserData();
         invalidateAllPrivilages();
+        logout();
         router.replace("/auth/login");
       })
       .catch((err) => {
@@ -48,6 +51,7 @@ const SignOutButton: FC = () => {
         });
       });
   };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger className="group group flex w-full items-center justify-start gap-3 rounded-lg p-2 text-gray-800 hover:bg-red-50 hover:text-red-800">

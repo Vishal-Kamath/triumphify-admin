@@ -7,6 +7,7 @@ import UserTasksSection from "./tasks";
 import LeadsSection from "./leads-users";
 import { Separator } from "@/components/ui/separator";
 import EmployeeDetails from "./(details)/employee-details";
+import EmployeeTime from "./(details)/employee-time";
 
 const AccountPage: FC = () => {
   const { data: employee, isLoading } = useMe();
@@ -21,7 +22,7 @@ const AccountPage: FC = () => {
         <Separator />
         <div className="flex gap-9 max-lg:flex-col">
           <EmployeeDetails />
-          <div className="w-full max-w-sm"></div>
+          <EmployeeTime />
         </div>
         <Separator />
         <LeadsSection role={employee.role} />
