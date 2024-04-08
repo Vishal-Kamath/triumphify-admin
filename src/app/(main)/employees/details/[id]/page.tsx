@@ -12,6 +12,7 @@ import ActivateDeactivateEmployee from "./activate-deactivate-employee";
 import { useMe } from "@/lib/auth";
 import TabComponent from "@/components/misc/component";
 import PrivilageProvider from "@/components/providers/privilage.provider";
+import EmployeeTime from "./employee-time";
 
 const EmpolyeDetails: FC = () => {
   const id = useParams()["id"] as string;
@@ -25,8 +26,8 @@ const EmpolyeDetails: FC = () => {
 
   return (
     <PrivilageProvider path="/employees/details/:id">
-      <TabComponent>
-        <div className="flex items-center gap-3">
+      <TabComponent className="max-xl:max-w-lg mx-auto max-w-6xl">
+        <div className="flex w-full items-center gap-3">
           <Link
             href="/employees/details"
             className={cn(buttonVariants({ variant: "ghost" }), "rounded-full")}
@@ -36,13 +37,14 @@ const EmpolyeDetails: FC = () => {
           <h2 className="text-xl font-semibold">{employee?.username}</h2>
         </div>
 
-        <div className="flex gap-6">
+        <div className="flex max-xl:flex-col justify-between max-xl:items-center gap-12 xl:gap-6">
           <EmployeeDetailsForm employee={employee} />
-          {me && me.role === "superadmin" ? (
-            <div className="ml-auto flex w-full max-w-lg flex-col gap-9">
+          <div className="flex max-w-lg flex-col gap-9 w-full min-w-[25rem]">
+            <EmployeeTime employee={employee} />
+            {me && me.role === "superadmin" ? (
               <ActivateDeactivateEmployee employee={employee} />
-            </div>
-          ) : null}
+            ) : null}
+          </div>
         </div>
       </TabComponent>
     </PrivilageProvider>

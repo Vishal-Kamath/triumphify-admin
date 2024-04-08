@@ -171,14 +171,14 @@ const EmployeeDetailsForm: FC<{ employee: Employee }> = ({ employee }) => {
           )}
         />
         {loading ? (
-          <Button disabled className="max-w-xs">
+          <Button disabled className="sm:max-w-xs">
             <AiOutlineLoading className="mr-2 h-4 w-4 animate-spin" />
             Please wait..
           </Button>
         ) : (
           <Button
             type="submit"
-            className="max-w-xs"
+            className="sm:max-w-xs"
             disabled={!buttonIsEnabled}
           >
             Save Changes
