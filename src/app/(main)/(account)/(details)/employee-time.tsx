@@ -81,6 +81,9 @@ const EmployeeTime: FC = () => {
             const time = Number(tickValue);
             const hours = Math.floor(time / (60 * 60));
             const minutes = Math.floor((time % (60 * 60)) / 60);
+            const seconds = padZero(time % 60);
+
+            if (time < 1800) return `${minutes}m ${seconds}s`;
             if (hours === 0) return `${minutes}m`;
             return `${hours}h ${minutes}m`;
           },
