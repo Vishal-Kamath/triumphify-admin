@@ -1,6 +1,6 @@
 import { TimeLogContext } from "@/components/providers/time.log.provider";
 import { Clock4 } from "lucide-react";
-import { FC, useContext } from "react";
+import { FC, useContext, useRef } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,6 +14,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useSession } from "@/lib/session";
+import { convertUTCDateToLocalDate } from "@/lib/utils";
 
 ChartJS.register(
   CategoryScale,
@@ -40,24 +41,24 @@ const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const EmployeeTime: FC = () => {
   const { time } = useContext(TimeLogContext);
-  const { data: session } = useSession();
+  const { data: session, refetch } = useSession();
 
   const todayDate = new Date();
-  const today = new Date(
-    todayDate.getFullYear(),
-    todayDate.getMonth(),
-    todayDate.getDate(),
-    0,
-    0,
-    0
-  );
+  const today = convertUTCDateToLocalDate(new Date()).toDateString();
+  const pastToday = useRef(today);
+
+  const nextDay = today !== pastToday.current;
+  if (nextDay) {
+    refetch();
+  }
+  pastToday.current = today;
+
   const datasets: ChartDataset<"bar">[] = [
     {
       label: "Time Spent",
       data:
         session?.map((s) => {
-          const isToday =
-            today.toDateString() === new Date(s.date).toDateString();
+          const isToday = today === new Date(s.date).toDateString();
           return isToday ? time + s.time : s.time;
         }) ?? Array(7).fill(0),
       backgroundColor: "#bbf7d0",
@@ -114,9 +115,7 @@ const EmployeeTime: FC = () => {
   };
 
   const findTodayTime =
-    session?.find(
-      (s) => today.toDateString() === new Date(s.date).toDateString()
-    )?.time || 0;
+    session?.find((s) => today === new Date(s.date).toDateString())?.time || 0;
   const timeString = formatedTime(time + findTodayTime);
 
   return (
