@@ -11,10 +11,14 @@ const ActivateDeactivateEmployee: FC<{ employee?: Employee }> = ({
   const [loading, setLoading] = useState(false);
 
   function handleActivateDeactivate() {
+    const doesAdminWantToDeactivateOrActivae = window.confirm(
+      `Are you sure you want to ${employee?.status === "active" ? "deactivate" : "activate"} this employee?`
+    );
+    if (!doesAdminWantToDeactivateOrActivae) return;
     axios
       .get(
         `${process.env.ENDPOINT}/api/employees/${employee?.id}/status/${employee?.status === "active" ? "deactive" : "active"}`,
-        { withCredentials: true },
+        { withCredentials: true }
       )
       .then((res) => {
         invalidateAllEmployee(employee?.id || "");
@@ -22,12 +26,20 @@ const ActivateDeactivateEmployee: FC<{ employee?: Employee }> = ({
   }
 
   return (
-    <div className="flex w-full max-w-lg flex-col gap-3 rounded-md border-1 border-slate-300 p-4 pt-6 hover:shadow-sm">
-      <h4 className="font-semibold text-slate-700">
+    <div className="relative isolate flex w-full max-w-lg flex-col gap-3 rounded-md border-1 border-red-200 p-4 pt-6">
+      <div
+        style={{
+          backgroundImage: "url('/cancel-bg.svg')",
+          backgroundSize: "4.5rem",
+          backgroundRepeat: "repeat",
+        }}
+        className="absolute left-0 top-0 -z-10 h-full w-full opacity-[3%]"
+      ></div>
+      <h3 className="font-medium text-red-700">
         {employee?.status === "active"
           ? "Deactivate Employee"
           : "Activate Employee"}
-      </h4>
+      </h3>
       {employee?.status === "active" ? (
         <p className="text-xs text-slate-500">
           This process will not delete the employee or the employee data. This
@@ -41,14 +53,19 @@ const ActivateDeactivateEmployee: FC<{ employee?: Employee }> = ({
       )}
 
       {loading ? (
-        <Button disabled className="ml-auto max-w-xs">
+        <Button
+          disabled
+          variant="destructive"
+          className="ml-auto max-w-xs mt-4"
+        >
           <AiOutlineLoading className="mr-2 h-4 w-4 animate-spin" />
           Please wait..
         </Button>
       ) : (
         <Button
           type="submit"
-          className="ml-auto max-w-xs"
+          className="ml-auto max-w-xs mt-4"
+          variant="destructive"
           onClick={handleActivateDeactivate}
         >
           {employee?.status === "active" ? "Deactivate" : "Activate"}
