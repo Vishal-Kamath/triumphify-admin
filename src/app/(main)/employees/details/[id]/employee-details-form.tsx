@@ -56,9 +56,7 @@ const EmployeeDetailsForm: FC<{ employee: Employee }> = ({ employee }) => {
     axios
       .post(
         `${process.env.ENDPOINT}/api/employees/details/${employee.id}`,
-        {
-          role: values.role,
-        },
+        values,
         {
           headers: {
             "Content-Type": "application/json",
@@ -106,12 +104,7 @@ const EmployeeDetailsForm: FC<{ employee: Employee }> = ({ employee }) => {
             <FormItem className="w-full">
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input
-                  type="text"
-                  placeholder="John Doe"
-                  disabled={true}
-                  {...field}
-                />
+                <Input type="text" placeholder="John Doe" {...field} />
               </FormControl>
               <FormMessage />
               <FormDescription className="text-xs">
@@ -131,7 +124,6 @@ const EmployeeDetailsForm: FC<{ employee: Employee }> = ({ employee }) => {
                 <Input
                   type="email"
                   placeholder="johndoe@email.com"
-                  disabled={true}
                   {...field}
                 />
               </FormControl>
