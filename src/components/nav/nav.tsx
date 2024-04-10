@@ -29,11 +29,13 @@ import NavSection from "./nav-section";
 import { IoLogoGoogle } from "react-icons/io";
 import { MdOutlinePayments } from "react-icons/md";
 import { IconType } from "react-icons/lib";
+import { useNav } from "@/lib/nav";
 
 export interface NavElementType {
   label: string;
   href: string;
   icon: LucideIcon | IconType;
+  notification?: string;
 }
 
 export interface NavSectionType {
@@ -41,136 +43,140 @@ export interface NavSectionType {
   elements: NavElementType[];
 }
 
-const navSections: NavSectionType[] = [
-  {
-    label: "User",
-    elements: [
-      {
-        label: "Accounts",
-        href: "/users/accounts",
-        icon: Users,
-      },
-      {
-        label: "Leads",
-        href: "/users/leads",
-        icon: UserSearch,
-      },
-      {
-        label: "Stats",
-        href: "/users/stats",
-        icon: BarChart3,
-      },
-      {
-        label: "Tickets",
-        href: "/users/tickets",
-        icon: Ticket,
-      },
-    ],
-  },
-  {
-    label: "Employee",
-    elements: [
-      {
-        label: "Details",
-        href: "/employees/details",
-        icon: Users,
-      },
-      {
-        label: "Leads",
-        href: "/employees/leads",
-        icon: UserSearch,
-      },
-      {
-        label: "Tickets",
-        href: "/employees/tickets",
-        icon: Ticket,
-      },
-      {
-        label: "Logs",
-        href: "/employees/logs",
-        icon: FileClock,
-      },
-      {
-        label: "Create",
-        href: "/employees/create",
-        icon: UserPlus,
-      },
-    ],
-  },
-  {
-    label: "Product",
-    elements: [
-      {
-        label: "Details",
-        href: "/products/details",
-        icon: PackageSearch,
-      },
-      {
-        label: "Categories",
-        href: "/products/categories",
-        icon: Blocks,
-      },
-      {
-        label: "Attibutes",
-        href: "/products/attributes",
-        icon: FileText,
-      },
-      {
-        label: "Create",
-        href: "/products/create",
-        icon: PackagePlus,
-      },
-    ],
-  },
-  {
-    label: "Order",
-    elements: [
-      {
-        label: "Details",
-        href: "/orders/details",
-        icon: FileSearch,
-      },
-      {
-        label: "Analytics",
-        href: "/orders/analytics",
-        icon: BarChart3,
-      },
-    ],
-  },
-  {
-    label: "Banners",
-    elements: [
-      {
-        label: "Main Banner",
-        href: "/banners/main",
-        icon: ImageLucide,
-      },
-      {
-        label: "Sub Banner",
-        href: "/banners/sub",
-        icon: ImageLucide,
-      },
-    ],
-  },
-  {
-    label: "Config",
-    elements: [
-      {
-        label: "Google Tag Manager",
-        href: "/config/gtm",
-        icon: IoLogoGoogle,
-      },
-      {
-        label: "Payment",
-        href: "/config/payment",
-        icon: MdOutlinePayments,
-      },
-    ],
-  },
-];
-
 const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
   const [open, setOpen] = useState(false);
+
+  const { data: nav } = useNav();
+  console.log(nav);
+  const navSections: NavSectionType[] = [
+    {
+      label: "User",
+      elements: [
+        {
+          label: "Accounts",
+          href: "/users/accounts",
+          icon: Users,
+        },
+        {
+          label: "Leads",
+          href: "/users/leads",
+          icon: UserSearch,
+          notification: nav?.leads,
+        },
+        {
+          label: "Stats",
+          href: "/users/stats",
+          icon: BarChart3,
+        },
+        {
+          label: "Tickets",
+          href: "/users/tickets",
+          icon: Ticket,
+        },
+      ],
+    },
+    {
+      label: "Employee",
+      elements: [
+        {
+          label: "Details",
+          href: "/employees/details",
+          icon: Users,
+        },
+        {
+          label: "Leads",
+          href: "/employees/leads",
+          icon: UserSearch,
+          notification: nav?.leads,
+        },
+        {
+          label: "Tickets",
+          href: "/employees/tickets",
+          icon: Ticket,
+        },
+        {
+          label: "Logs",
+          href: "/employees/logs",
+          icon: FileClock,
+        },
+        {
+          label: "Create",
+          href: "/employees/create",
+          icon: UserPlus,
+        },
+      ],
+    },
+    {
+      label: "Product",
+      elements: [
+        {
+          label: "Details",
+          href: "/products/details",
+          icon: PackageSearch,
+        },
+        {
+          label: "Categories",
+          href: "/products/categories",
+          icon: Blocks,
+        },
+        {
+          label: "Attibutes",
+          href: "/products/attributes",
+          icon: FileText,
+        },
+        {
+          label: "Create",
+          href: "/products/create",
+          icon: PackagePlus,
+        },
+      ],
+    },
+    {
+      label: "Order",
+      elements: [
+        {
+          label: "Details",
+          href: "/orders/details",
+          icon: FileSearch,
+        },
+        {
+          label: "Analytics",
+          href: "/orders/analytics",
+          icon: BarChart3,
+        },
+      ],
+    },
+    {
+      label: "Banners",
+      elements: [
+        {
+          label: "Main Banner",
+          href: "/banners/main",
+          icon: ImageLucide,
+        },
+        {
+          label: "Sub Banner",
+          href: "/banners/sub",
+          icon: ImageLucide,
+        },
+      ],
+    },
+    {
+      label: "Config",
+      elements: [
+        {
+          label: "Google Tag Manager",
+          href: "/config/gtm",
+          icon: IoLogoGoogle,
+        },
+        {
+          label: "Payment",
+          href: "/config/payment",
+          icon: MdOutlinePayments,
+        },
+      ],
+    },
+  ];
 
   return (
     <div className="flex h-full min-h-screen flex-col bg-white">
