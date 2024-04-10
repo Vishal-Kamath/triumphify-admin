@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { dateFormater } from "@/utils/dateFormater";
 import {
   ColumnDef,
@@ -15,7 +15,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Trash2 } from "lucide-react";
 import { RxCaretSort } from "react-icons/rx";
 import { FC, useState } from "react";
 import Link from "next/link";
@@ -27,10 +27,14 @@ import DataTableToolbar from "@/components/data-table/data-table-toolbar";
 import DataTableExtract from "@/components/data-table/data-table-extract";
 import { Badge } from "@/components/ui/badge";
 import { DataTableFacetedFilter } from "@/components/data-table/data-table-faceted-filter";
-import { useLeads } from "@/lib/lead";
+import { invalidateAllLeads, useLeads } from "@/lib/lead";
 import AssignLeadsDropdown from "./assign-lead-dropdown";
 import AssignedToDataTableFacetedFilter from "./assigned-to-filter";
 import EditLead from "./edit-lead";
+import { useToast } from "@/components/ui/use-toast";
+import axios from "axios";
+import { AiOutlineLoading } from "react-icons/ai";
+import ConfirmDelete from "@/components/misc/confirmDelete";
 
 const statusStyles = {
   pending:
@@ -38,6 +42,63 @@ const statusStyles = {
   converted:
     "bg-green-50 border-1 border-green-500 hover:bg-green-50 text-green-600",
   rejected: "bg-red-50 border-1 border-red-500 hover:bg-red-50 text-red-600",
+};
+
+const DeleteLeadsButton: FC<{ leadId: string; leadName: string }> = ({
+  leadId,
+  leadName,
+}) => {
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+
+  function deleteLead() {
+    setLoading(true);
+    axios
+      .delete(`${process.env.ENDPOINT}/api/leads/${leadId}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      })
+      .then((res) => {
+        setLoading(false);
+        invalidateAllLeads();
+        toast({
+          title: res.data.title,
+          description: res.data.description,
+          variant: res.data.type,
+        });
+      })
+      .catch((err) => {
+        setLoading(false);
+        if (!err.response?.data) return;
+        toast({
+          title: "Error",
+          description: err.response.data.description,
+          variant: err.response.data.type,
+        });
+      });
+  }
+  return loading ? (
+    <Button
+      disabled
+      variant="ghost"
+      className="text-slate-600 animate-spin hover:bg-red-50 hover:text-red-700"
+    >
+      <AiOutlineLoading className="size-4" />
+    </Button>
+  ) : (
+    <ConfirmDelete
+      confirmText={leadName}
+      deleteFn={deleteLead}
+      className={cn(
+        buttonVariants({ variant: "ghost" }),
+        "text-slate-600 hover:bg-red-50 hover:text-red-700"
+      )}
+    >
+      <Trash2 className="size-4" />
+    </ConfirmDelete>
+  );
 };
 
 const columns: ColumnDef<Lead>[] = [
@@ -118,7 +179,15 @@ const columns: ColumnDef<Lead>[] = [
     header: "",
     enableHiding: false,
     enableSorting: false,
-    cell: ({ row }) => <EditLead {...row.original} />,
+    cell: ({ row }) => (
+      <div className="items-center flex">
+        <EditLead {...row.original} />
+        <DeleteLeadsButton
+          leadName={row.original.name || "Delete Lead"}
+          leadId={row.original.id}
+        />
+      </div>
+    ),
   },
 ];
 
