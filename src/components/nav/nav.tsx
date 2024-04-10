@@ -174,7 +174,7 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <div className="flex h-full min-h-screen flex-col bg-white">
-      <header className="fixed left-0 top-0 z-[999] flex h-14 w-full items-center justify-start gap-3 border-b-1 border-slate-300 bg-white px-4 shadow-sm">
+      <header className="fixed left-0 top-0 z-[995] flex h-14 w-full items-center justify-start gap-3 border-b-1 border-slate-300 bg-white px-4 shadow-sm">
         <button
           onClick={() => setOpen((open) => !open)}
           className="rounded-xl p-2 text-slate-500 hover:bg-slate-50 hover:text-slate-800 lg:hidden"

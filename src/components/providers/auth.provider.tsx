@@ -26,7 +26,7 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
           className="overflow-hidden sm:rounded-[1.75rem]"
           closeable={false}
         >
-          <div className="relative isolate flex flex-col items-center justify-center gap-6 pb-4">
+          <div className="relative isolate flex flex-col items-center justify-center gap-6 py-4">
             <Image
               alt="auth background image"
               src="/auth-bg.svg"
@@ -34,7 +34,13 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
               height={500}
               className="fixed left-0 top-0 -z-10 h-full w-full object-cover"
             />
-            <Logo className="max-w-[12.5rem]" />
+            <Image
+              src="/logo.svg"
+              alt="Triumphify Logo"
+              width={500}
+              height={500}
+              className="w-[12.5rem]"
+            />
             <LoginForm inline={true} />
           </div>
         </DialogContent>
