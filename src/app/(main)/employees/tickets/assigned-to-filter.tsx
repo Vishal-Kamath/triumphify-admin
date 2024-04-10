@@ -11,11 +11,14 @@ const AssignedToDataTableFacetedFilter: FC<AssignedToFilterProps> = ({
 }) => {
   const { data: employees, isLoading } = useEmployees();
   if (isLoading || !employees) return null;
+  const filteredEmployees = employees?.filter(
+    (employee) => employee.role === "employee"
+  );
   return (
     <DataTableFacetedFilter
       column={column}
       title={"Assigned"}
-      options={employees
+      options={filteredEmployees
         .map((employee) => ({
           label: employee.username!,
           value: employee.id,

@@ -64,6 +64,7 @@ const EditLead: FC<Lead> = (leads) => {
   const [dateOpen, setDateOpen] = useState(false);
 
   const { data: employees, isLoading, refetch } = useEmployees();
+  
 
   const form = useForm<UpdateLead>({
     resolver: zodResolver(updateLead),
@@ -129,6 +130,9 @@ const EditLead: FC<Lead> = (leads) => {
   }
 
   if (isLoading || !employees) return null;
+  const filteredEmployees = employees.filter(
+    (employee) => employee.role === "employee"
+  );
 
   const name = form.watch("name");
   const email = form.watch("email");
@@ -149,10 +153,6 @@ const EditLead: FC<Lead> = (leads) => {
     source.trim() !== leads.source ||
     status.trim() !== leads.status ||
     tel.trim() !== leads.tel;
-
-  const findAssignedEmployee = !!assigned
-    ? employees?.find((employee) => employee.id === assigned) || null
-    : null;
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -231,7 +231,7 @@ const EditLead: FC<Lead> = (leads) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {employees.map((employee) => (
+                        {filteredEmployees.map((employee) => (
                           <SelectItem key={employee.id} value={employee.id}>
                             <div className="flex flex-col w-full text-start items-start">
                               <span className="text-sm text-slate-800">

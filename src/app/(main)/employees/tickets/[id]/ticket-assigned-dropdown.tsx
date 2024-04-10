@@ -93,6 +93,10 @@ const TicketAssignedToDropdown: FC = () => {
   if (isLoading || ticketIsLoading || !employees) return null;
   if (!ticket) return null;
 
+  const filteredEmployees = employees?.filter(
+    (employee) => employee.role === "employee"
+  );
+
   return (
     <Form {...form}>
       <form>
@@ -114,7 +118,7 @@ const TicketAssignedToDropdown: FC = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {employees.map((employee) => (
+                    {filteredEmployees.map((employee) => (
                       <SelectItem
                         key={employee.id}
                         value={employee.id.toString()}
