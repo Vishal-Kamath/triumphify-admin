@@ -43,7 +43,7 @@ const LoginForm: FC<{ inline?: boolean }> = ({ inline }) => {
   function onSubmit(values: LoginFormType) {
     setLoading(true);
     axios
-      .post<NotificationType>(
+      .post<NotificationType & { redirect: string }>(
         `${process.env.ENDPOINT}/api/auth/login`,
         values,
         {
@@ -63,6 +63,7 @@ const LoginForm: FC<{ inline?: boolean }> = ({ inline }) => {
         invalidateUserData();
         invalidateAllPrivilages();
         login();
+        if (res.data.redirect !== "/") return router.replace(res.data.redirect);
         if (!inline) return router.replace("/");
       })
       .catch((err) => {
