@@ -81,7 +81,7 @@ const LoginForm: FC<{ inline?: boolean }> = ({ inline }) => {
         className="flex w-full max-w-sm flex-col items-center gap-6"
       >
         <div className="flex w-full flex-col items-center gap-2">
-          <h2 className="text-2xl font-semibold text-slate-950">
+          <h2 className="text-2xl font-semibold text-slate-700">
             {inline ? "You seem to be Logged out" : "Welcome back!"}
           </h2>
           <p className="text-sm text-gray-500">
@@ -121,19 +121,27 @@ const LoginForm: FC<{ inline?: boolean }> = ({ inline }) => {
           />
           <Link
             href="/auth/forgot"
-            className="ml-auto text-sm font-semibold hover:text-blue-600 hover:underline"
+            className="ml-auto text-sm text-slate-500 font-semibold hover:text-blue-700 hover:underline"
           >
             forgot password?
           </Link>
         </div>
 
         {loading ? (
-          <Button disabled className="w-full">
+          <Button
+            disabled
+            variant="outline"
+            className="w-full text-slate-700 bg-fuchsia-100/30 hover:bg-fuchsia-100/50 hover:border-fuchsia-300 hover:text-fuchsia-800"
+          >
             <AiOutlineLoading className="mr-2 h-4 w-4 animate-spin" />
             Please wait..
           </Button>
         ) : (
-          <Button type="submit" className="w-full">
+          <Button
+            type="submit"
+            variant="outline"
+            className="w-full text-slate-700 bg-fuchsia-100/30 hover:bg-fuchsia-100/50 hover:border-fuchsia-300 hover:text-fuchsia-800"
+          >
             Login
           </Button>
         )}

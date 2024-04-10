@@ -66,10 +66,10 @@ const ForgotPasswordForm: FC = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex w-full max-w-sm flex-col items-center gap-6"
+        className="flex w-full max-w-sm flex-col items-start gap-6"
       >
-        <div className="flex w-full flex-col items-center gap-2">
-          <h2 className="text-2xl font-semibold text-slate-950">
+        <div className="flex w-full flex-col items-start gap-2">
+          <h2 className="text-2xl font-semibold text-slate-700">
             Forgot Password?
           </h2>
           <p className="text-sm text-gray-500">
@@ -93,20 +93,30 @@ const ForgotPasswordForm: FC = () => {
           )}
         />
         {loading ? (
-          <Button disabled className="w-full">
+          <Button
+            disabled
+            variant="outline"
+            className="w-full text-slate-700 bg-fuchsia-100/30 hover:bg-fuchsia-100/50 hover:border-fuchsia-300 hover:text-fuchsia-800"
+          >
             <AiOutlineLoading className="mr-2 h-4 w-4 animate-spin" />
             Please wait..
           </Button>
         ) : (
-          <Button type="submit" className="w-full">
+          <Button
+            type="submit"
+            variant="outline"
+            className="w-full text-slate-700 bg-fuchsia-100/30 hover:bg-fuchsia-100/50 hover:border-fuchsia-300 hover:text-fuchsia-800"
+          >
             Send link
           </Button>
         )}
-        <Separator className="relative">
-          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-400">
+        <div className="flex w-full max-w-sm items-center gap-3">
+          <Separator className="w-full shrink bg-gray-200" />
+          <span className="text-nowrap text-xs font-medium text-gray-500">
             OR
           </span>
-        </Separator>
+          <Separator className="w-full shrink bg-gray-200" />
+        </div>
         <div className="flex gap-1 text-sm text-gray-500">
           <span>Back to</span>
           <Link
