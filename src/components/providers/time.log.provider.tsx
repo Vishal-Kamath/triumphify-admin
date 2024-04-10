@@ -71,7 +71,7 @@ const TimeLogProvider: FC<{ children: ReactNode }> = ({ children }) => {
   }, []);
 
   function login() {
-    socket.emit("login");
+    pingLogin();
   }
 
   function logout() {
