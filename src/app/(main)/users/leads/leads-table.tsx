@@ -26,11 +26,13 @@ import { useLeads } from "@/lib/lead";
 import EditLead from "./edit-lead";
 
 const statusStyles = {
+  new: "bg-blue-50 border-1 border-blue-500 hover:bg-blue-50 text-blue-600 capitalize",
   pending:
-    "bg-yellow-50 border-1 border-yellow-500 hover:bg-yellow-50 text-yellow-600",
+    "bg-yellow-50 border-1 border-yellow-500 hover:bg-yellow-50 text-yellow-600 capitalize",
   converted:
-    "bg-green-50 border-1 border-green-500 hover:bg-green-50 text-green-600",
-  rejected: "bg-red-50 border-1 border-red-500 hover:bg-red-50 text-red-600",
+    "bg-green-50 border-1 border-green-500 hover:bg-green-50 text-green-600 capitalize",
+  rejected:
+    "bg-red-50 border-1 border-red-500 hover:bg-red-50 text-red-600 capitalize",
 };
 
 const columns: ColumnDef<Lead>[] = [

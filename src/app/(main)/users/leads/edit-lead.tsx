@@ -50,7 +50,7 @@ const updateLead = z.object({
   email: z.string(),
   tel: z.string(),
   source: z.string(),
-  status: z.enum(["pending", "converted", "rejected"]),
+  status: z.enum(["new", "pending", "converted", "rejected"]),
   last_contacted: z.date().nullable(),
 });
 type UpdateLead = z.infer<typeof updateLead>;
@@ -244,6 +244,7 @@ const EditLead: FC<Lead> = (leads) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
+                      <SelectItem value="new">New</SelectItem>
                       <SelectItem value="pending">Pending</SelectItem>
                       <SelectItem value="converted">Converted</SelectItem>
                       <SelectItem value="rejected">Rejected</SelectItem>
