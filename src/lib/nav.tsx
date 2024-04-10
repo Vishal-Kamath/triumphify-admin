@@ -3,6 +3,7 @@ import axios from "axios";
 
 type Nav = {
   leads?: string;
+  orders?: string;
 };
 const getNav = (): Promise<Nav & { type: string }> =>
   axios

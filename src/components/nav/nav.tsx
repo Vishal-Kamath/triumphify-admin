@@ -138,6 +138,7 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
           label: "Details",
           href: "/orders/details",
           icon: FileSearch,
+          notification: nav?.orders,
         },
         {
           label: "Analytics",
