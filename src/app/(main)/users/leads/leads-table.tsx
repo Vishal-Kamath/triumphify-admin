@@ -146,6 +146,10 @@ const LeadsTable: FC = () => {
           column={table.getColumn("status")}
           options={[
             {
+              label: "New",
+              value: "new",
+            },
+            {
               label: "Pending",
               value: "pending",
             },
