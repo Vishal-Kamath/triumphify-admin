@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import {
   FC,
   ReactNode,
@@ -22,9 +21,6 @@ const socket = io(process.env.ENDPOINT as string, {
 });
 
 const TimeLogProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [isConnected, setIsConnected] = useState(false);
-  const [transport, setTransport] = useState("N/A");
-
   const [time, setTime] = useState(0);
 
   const loggedIn = useRef(false);
@@ -70,7 +66,11 @@ const TimeLogProvider: FC<{ children: ReactNode }> = ({ children }) => {
     };
   }, []);
 
-  function login() {
+  async function login() {
+    await socket.disconnect();
+    await socket.connect();
+    unauthorized.current = false;
+    loggedIn.current = false;
     pingLogin();
   }
 
