@@ -26,6 +26,15 @@ import { FC, useState } from "react";
 import { RxCaretSort } from "react-icons/rx";
 import EmployeeLogsDataTableFacetedFilter from "./employee-filter";
 import EmployeeDetailsFromId from "./employee-from-id";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDownIcon, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DataTableFacetedFilter } from "@/components/data-table/data-table-faceted-filter";
 
 const columns: ColumnDef<EmployeeLog>[] = [
   {
@@ -100,18 +109,73 @@ const EmployeeLogsTable: FC = () => {
     <DataTableSkeleton columnCount={columns.length} />
   ) : (
     <div className="flex w-full flex-col gap-4">
-      <DataTableToolbar
-        table={table}
-        searchUsing="employee_id"
-        refetch={refetch}
-        dataTableExtract={
-          <DataTableExtract data={logs || []} name={name.replace(".csv", "")} />
-        }
-      />
-      <div className="flex gap-2">
-        <EmployeeLogsDataTableFacetedFilter
-          column={table.getColumn("employee_id")}
-        />
+      <div className="flex items-center justify-between gap-4 max-md:flex-col">
+        <div className="flex w-full items-center justify-start gap-2">
+          <EmployeeLogsDataTableFacetedFilter
+            column={table.getColumn("employee_id")}
+          />
+          <DataTableFacetedFilter
+            column={table.getColumn("employee_role")}
+            title={"Role"}
+            options={[
+              {
+                label: "Superadmin",
+                value: "superadmin",
+              },
+              {
+                label: "Admin",
+                value: "admin",
+              },
+              {
+                label: "Employee",
+                value: "employee",
+              },
+            ]}
+          />
+        </div>
+
+        <div className="w-full overflow-x-auto">
+          <div className="flex w-full min-w-fit items-center justify-end gap-2">
+            <DataTableExtract
+              data={logs || []}
+              name={name.replace(".csv", "")}
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  Columns <ChevronDownIcon className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button
+              variant="secondary"
+              className="group active:bg-purple-100"
+              onClick={() => refetch()}
+            >
+              <RefreshCw className="h-3 w-3 group-active:animate-spin " />
+            </Button>
+          </div>
+        </div>
       </div>
       <DataTable table={table} columnSpan={columns.length} />
       <DataTablePagination table={table} />
