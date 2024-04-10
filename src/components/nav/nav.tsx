@@ -72,6 +72,7 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
           label: "Tickets",
           href: "/users/tickets",
           icon: Ticket,
+          notification: nav?.tickets,
         },
       ],
     },
@@ -93,6 +94,7 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
           label: "Tickets",
           href: "/employees/tickets",
           icon: Ticket,
+          notification: nav?.tickets,
         },
         {
           label: "Logs",
