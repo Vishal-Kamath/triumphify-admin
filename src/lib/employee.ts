@@ -21,6 +21,27 @@ export const useEmployees = () =>
     staleTime: 1000 * 60 * 15,
   });
 
+  const getSuperadmins = (): Promise<Employee[] & { type?: string }> =>
+    axios
+      .get<{ data: Employee[] }>(
+        `${process.env.ENDPOINT}/api/employees/superadmins`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      )
+      .then((res) => res.data.data);
+
+  export const useSuperadmins = () =>
+    useQuery({
+      queryKey: ["employees", "superadmins"],
+      queryFn: getSuperadmins,
+      retry: 0,
+      staleTime: 1000 * 60 * 15,
+    });
+
 const getEmployee = (id: string): Promise<Employee & { type?: string }> =>
   axios
     .get(`${process.env.ENDPOINT}/api/employees/details/${id}`, {

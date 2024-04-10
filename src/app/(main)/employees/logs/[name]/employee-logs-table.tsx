@@ -24,6 +24,8 @@ import {
 import { useParams } from "next/navigation";
 import { FC, useState } from "react";
 import { RxCaretSort } from "react-icons/rx";
+import EmployeeLogsDataTableFacetedFilter from "./employee-filter";
+import EmployeeDetailsFromId from "./employee-from-id";
 
 const columns: ColumnDef<EmployeeLog>[] = [
   {
@@ -33,6 +35,9 @@ const columns: ColumnDef<EmployeeLog>[] = [
   {
     header: "Employee Id",
     accessorKey: "employee_id",
+    cell: ({ row }) => {
+      return <EmployeeDetailsFromId employee_id={row.original.employee_id} />;
+    },
   },
   {
     header: "Role",
@@ -103,6 +108,11 @@ const EmployeeLogsTable: FC = () => {
           <DataTableExtract data={logs || []} name={name.replace(".csv", "")} />
         }
       />
+      <div className="flex gap-2">
+        <EmployeeLogsDataTableFacetedFilter
+          column={table.getColumn("employee_id")}
+        />
+      </div>
       <DataTable table={table} columnSpan={columns.length} />
       <DataTablePagination table={table} />
     </div>
