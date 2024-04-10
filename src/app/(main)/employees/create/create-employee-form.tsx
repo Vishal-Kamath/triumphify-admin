@@ -180,12 +180,12 @@ const CreateEmployeeForm: FC = () => {
           )}
         />
         {loading ? (
-          <Button disabled className="mt-6 max-w-[15rem]">
+          <Button disabled className="mt-6 max-w-[15rem] ml-auto w-full">
             <AiOutlineLoading className="mr-2 h-4 w-4 animate-spin" />
             Please wait..
           </Button>
         ) : (
-          <Button type="submit" className="mt-6 max-w-[15rem]">
+          <Button type="submit" className="mt-6 max-w-[15rem] ml-auto w-full">
             Create
           </Button>
         )}

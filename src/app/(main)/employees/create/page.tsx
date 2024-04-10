@@ -7,7 +7,7 @@ import PrivilageProvider from "@/components/providers/privilage.provider";
 const CreateNewEmployee: FC = () => {
   return (
     <PrivilageProvider path="/employees/create">
-      <TabComponent>
+      <TabComponent className="max-w-md max-lg:mx-auto">
         <div className="flex flex-col">
           <h3 className="text-xl font-medium">Create New Employee</h3>
           <p className="text-sm text-gray-500">
