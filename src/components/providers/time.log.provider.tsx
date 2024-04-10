@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import {
   FC,
   ReactNode,
@@ -30,18 +31,26 @@ const TimeLogProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const loggedOut = useRef(true);
   const unauthorized = useRef(false);
 
+  const pingLogin = () => {
+    socket.emit("login");
+    if (unauthorized.current || loggedIn.current) return;
+    setTimeout(pingLogin, 1000);
+  };
+
   useEffect(() => {
     if (!loggedIn.current && !unauthorized.current) {
-      socket.emit("login");
+      pingLogin();
     }
 
     socket.on("loggedIn", () => {
       loggedIn.current = true;
       loggedOut.current = false;
+      unauthorized.current = false;
     });
     socket.on("loggedOut", () => {
       loggedIn.current = false;
       loggedOut.current = true;
+      unauthorized.current = true;
     });
     socket.on("unauthorized", () => {
       unauthorized.current = true;
@@ -53,12 +62,13 @@ const TimeLogProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
     return () => {
       socket.off("loggedIn");
+      socket.off("loggedOut");
       socket.off("unauthorized");
       socket.off("time");
 
       loggedIn.current = false;
     };
-  }, [loggedIn]);
+  }, []);
 
   function login() {
     socket.emit("login");
