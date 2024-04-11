@@ -93,11 +93,16 @@ const columns: ColumnDef<Order>[] = [
     header: "Status",
     id: "Status",
     accessorKey: "status",
-    cell: ({ row }) => (
-      <span className="text-xs text-nowrap capitalize px-2 py-1 border-1 border-neutral-500 rounded-full text-neutral-800 bg-neutral-50">
-        {row.original.status}
-      </span>
-    ),
+    cell: ({ row }) =>
+      row.original.cancelled ? (
+        <span className="text-xs text-nowrap capitalize px-2 py-1 border-1 border-red-500 rounded-full text-red-800 bg-red-50">
+          Cancelled
+        </span>
+      ) : (
+        <span className="text-xs text-nowrap capitalize px-2 py-1 border-1 border-neutral-500 rounded-full text-neutral-800 bg-neutral-50">
+          {row.original.status}
+        </span>
+      ),
   },
   {
     header: "Created At",
