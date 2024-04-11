@@ -56,9 +56,6 @@ const CategoryCharts: FC = () => {
   );
 
   if (isLoading || isLoading || isCategoryLoading) return <div>Loading...</div>;
-  if (!salesData) return <div>No Data</div>;
-  const { sales, sales_total, previous_sales_total } =
-    salesData as CategorySalesReturnType;
 
   return (
     <div className="flex flex-col gap-9 w-full h-full">
@@ -111,20 +108,37 @@ const CategoryCharts: FC = () => {
           </div>
         </div>
       </div>
-      <CategoryLineChart sales={sales || []} />
+      {salesData?.sales ? (
+        <CategoryLineChart sales={salesData.sales || []} />
+      ) : (
+        <div className="w-full h-full relative">
+          <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center text-xl bg-gray-400/10 text-slate-500">
+            No Data
+          </div>
+          <CategoryLineChart sales={[]} />
+        </div>
+      )}
       <div className="flex flex-col gap-6">
         <h4 className="text-xl text-start w-full font-semibold max-w-6xl mx-auto">
           Category Sales Adoption
         </h4>
         <div className="flex w-full max-lg:flex-col items-center gap-9 max-w-6xl mx-auto">
-          <CategoryBarChart
-            sales_total={sales_total}
-            previous_sales_total={previous_sales_total}
-          />
-          <CategorySalesAdoption
-            sales_total={sales_total}
-            previous_sales_total={previous_sales_total}
-          />
+          {salesData &&
+          salesData.sales_total &&
+          salesData.previous_sales_total ? (
+            <>
+              <CategoryBarChart
+                sales_total={salesData.sales_total}
+                previous_sales_total={salesData.previous_sales_total}
+              />
+              <CategorySalesAdoption
+                sales_total={salesData.sales_total}
+                previous_sales_total={salesData.previous_sales_total}
+              />
+            </>
+          ) : (
+            "No Data"
+          )}
         </div>
       </div>
     </div>
