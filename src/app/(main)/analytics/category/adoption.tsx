@@ -29,9 +29,9 @@ const CategorySalesAdoption: FC<{
       | "total_units_sold";
     className?: string;
   }> = ({ field, className }) => {
-    return sales_total[field] === previous_sales_total[field] ? (
-      <MoveRight className={className} strokeWidth={3} />
-    ) : sales_total[field] > previous_sales_total[field] ? (
+    return sales_total[field] ===
+      previous_sales_total[field] ? null : sales_total[field] >
+      previous_sales_total[field] ? (
       <TrendingUp className={className} strokeWidth={3} />
     ) : (
       <TrendingDown className={className} strokeWidth={3} />
@@ -57,13 +57,19 @@ const CategorySalesAdoption: FC<{
       </h4>
       <div className="flex gap-2 text-sm items-center font-semibold">
         <span className="text-lg md:text-xl text-slate-800">
+          {field !== "total_units_sold" ? "$" : ""}
           {sales_total[field]}
         </span>
 
-        {previous_sales_total[field] ? (
+        {(sales_total[field] > previous_sales_total[field] &&
+          previous_sales_total[field]) ||
+        (sales_total[field] < previous_sales_total[field] &&
+          sales_total[field]) ? (
           <span className={getColor(field)}>
             {Math.round(
-              (sales_total[field] / previous_sales_total[field]) * 100
+              sales_total[field] > previous_sales_total[field]
+                ? (sales_total[field] / previous_sales_total[field]) * 100
+                : (previous_sales_total[field] / sales_total[field]) * 100
             )}
             %
           </span>
