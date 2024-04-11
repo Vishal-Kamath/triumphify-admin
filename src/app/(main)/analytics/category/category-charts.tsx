@@ -89,8 +89,6 @@ const CategoryCharts: FC = () => {
               onYearChange={setTempYear}
               open={open}
               setOpen={(open) => {
-                setMonth(tempMonth);
-                setYear(tempYear);
                 setOpen(open);
               }}
               apply={() => {
