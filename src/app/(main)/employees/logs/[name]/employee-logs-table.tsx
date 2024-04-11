@@ -32,9 +32,17 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDownIcon, RefreshCw } from "lucide-react";
+import { CalendarIcon, ChevronDownIcon, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DataTableFacetedFilter } from "@/components/data-table/data-table-faceted-filter";
+import { cn } from "@/lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
 
 const columns: ColumnDef<EmployeeLog>[] = [
   {
@@ -85,7 +93,16 @@ const EmployeeLogsTable: FC = () => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
-  const { data: logs, isLoading, refetch } = useEmployeeLog(name);
+  const [startDate, setStartDate] = useState(
+    new Date(new Date().setMonth(new Date().getMonth() - 1))
+  );
+  const [endDate, setEndDate] = useState(new Date());
+
+  const {
+    data: logs,
+    isLoading,
+    refetch,
+  } = useEmployeeLog(name, startDate, endDate);
   logs?.map((log) => {
     if (log.employee_role === "superadmin") {
       log.employee_role = "supera-dmin";
@@ -181,6 +198,53 @@ const EmployeeLogsTable: FC = () => {
               <RefreshCw className="h-3 w-3 group-active:animate-spin " />
             </Button>
           </div>
+        </div>
+      </div>
+      <div className="flex justify-end">
+        <div className={cn("grid gap-2")}>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                id="date"
+                variant={"outline"}
+                className={cn(
+                  "w-[300px] justify-start text-left font-normal",
+                  !startDate || (!endDate && "text-muted-foreground")
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {startDate ? (
+                  endDate ? (
+                    <>
+                      {format(startDate, "LLL dd, y")} -{" "}
+                      {format(endDate, "LLL dd, y")}
+                    </>
+                  ) : (
+                    format(startDate, "LLL dd, y")
+                  )
+                ) : (
+                  <span>Pick a date</span>
+                )}
+                <RxCaretSort className="ml-auto h-4 w-4 text-slate-600" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+              <Calendar
+                initialFocus
+                mode="range"
+                defaultMonth={startDate}
+                selected={{
+                  from: startDate,
+                  to: endDate,
+                }}
+                onSelect={(date) => {
+                  date?.from && setStartDate(date.from);
+                  date?.to && setEndDate(date.to);
+                }}
+                numberOfMonths={2}
+              />
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
       <DataTable table={table} columnSpan={columns.length} />

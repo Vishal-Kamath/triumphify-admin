@@ -82,18 +82,23 @@ export const useEmployeeLogs = () =>
 
 const getEmployeeLog = (
   name: string,
+  startDate: Date,
+  endDate: Date
 ): Promise<EmployeeLog[] & { type?: string }> =>
   axios
-    .get(`${process.env.ENDPOINT}/api/employees/logs/${name}`, {
-      withCredentials: true,
-    })
+    .get(
+      `${process.env.ENDPOINT}/api/employees/logs/${name}?start=${startDate}&end=${endDate}`,
+      {
+        withCredentials: true,
+      }
+    )
     .then((res) => res.data.data)
     .catch((err) => err.response.data);
 
-export const useEmployeeLog = (name: string) =>
+export const useEmployeeLog = (name: string, startDate: Date, endDate: Date) =>
   useQuery({
-    queryKey: ["employee-log", name],
-    queryFn: () => getEmployeeLog(name),
+    queryKey: ["employee-log", name, startDate, endDate],
+    queryFn: () => getEmployeeLog(name, startDate, endDate),
     retry: 0,
     staleTime: 1000 * 60 * 15,
   });
