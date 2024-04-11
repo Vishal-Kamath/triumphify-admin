@@ -44,6 +44,7 @@ interface SelectMonthProps {
   setOpen: (open: boolean) => void;
   className?: string;
   children: ReactNode;
+  align?: "center" | "end" | "start";
 }
 export const SelectMonth: FC<SelectMonthProps> = ({
   month: defaultMonth,
@@ -55,6 +56,7 @@ export const SelectMonth: FC<SelectMonthProps> = ({
   setOpen,
   children,
   className,
+  align,
 }) => {
   const max = new Date().getFullYear();
   const [month, setMonth] = useState(defaultMonth || new Date().getMonth());
@@ -73,21 +75,26 @@ export const SelectMonth: FC<SelectMonthProps> = ({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger className={className}>{children}</PopoverTrigger>
-      <PopoverContent className="flex flex-col gap-3">
+      <PopoverContent align={align} className="flex flex-col gap-3">
         <div className="flex justify-between gap-3">
           <Button
             aria-label="Go to previous page"
             variant="outline"
-            className="size-8 p-0"
+            className="size-8 p-0 shrink-0"
             onClick={() => setYear(year - 1)}
           >
             <LuChevronLeft className="size-4" aria-hidden="true" />
           </Button>
-          <span className="size-8">{year}</span>
+          <input
+            type="number"
+            value={year}
+            onChange={(e) => changeYear(Number(e.target.value))}
+            className="bg-transparent text-center outline-none border-b-1 border-slate-200 hover:border-slate-300 focus-within:border-slate-600 focus-within:hover:border-slate-600"
+          />
           <Button
             aria-label="Go to next page"
             variant="outline"
-            className="size-8 p-0"
+            className="size-8 p-0 shrink-0"
             onClick={() => setYear(year + 1)}
             disabled={year === max}
           >
@@ -102,7 +109,7 @@ export const SelectMonth: FC<SelectMonthProps> = ({
               className={cn(
                 "text-sm",
                 index === month &&
-                  "border-1 border-purple-400 bg-purple-100 text-purple-700 hover:bg-purple-200",
+                  "border-1 border-purple-400 bg-purple-100 text-purple-700 hover:bg-purple-200"
               )}
               onClick={() => changeMonth(index)}
             >

@@ -47,8 +47,16 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
   const [open, setOpen] = useState(false);
 
   const { data: nav } = useNav();
-  console.log(nav);
   const navSections: NavSectionType[] = [
+    {
+      elements: [
+        {
+          label: "Analytics",
+          href: "/analytics",
+          icon: BarChart3,
+        },
+      ],
+    },
     {
       label: "User",
       elements: [
