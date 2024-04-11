@@ -72,6 +72,9 @@ export const SelectMonth: FC<SelectMonthProps> = ({
   }
 
   function changeYear(year: number) {
+    if (year === maxYear && month > maxMonth) {
+      changeMonth(maxMonth);
+    }
     setYear(year);
     onYearChange && onYearChange(year);
   }
