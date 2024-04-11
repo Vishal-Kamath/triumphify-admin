@@ -51,6 +51,7 @@ const columns: ColumnDef<EmployeeLog>[] = [
   {
     header: "Role",
     accessorKey: "employee_role",
+    cell: ({ row }) => row.original.employee_role.replaceAll("-", ""),
   },
   {
     header: "Message",
@@ -85,6 +86,11 @@ const EmployeeLogsTable: FC = () => {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
   const { data: logs, isLoading, refetch } = useEmployeeLog(name);
+  logs?.map((log) => {
+    if (log.employee_role === "superadmin") {
+      log.employee_role = "supera-dmin";
+    }
+  });
 
   const table = useReactTable({
     data: logs || [],
@@ -120,7 +126,7 @@ const EmployeeLogsTable: FC = () => {
             options={[
               {
                 label: "Superadmin",
-                value: "superadmin",
+                value: "supera-dmin",
               },
               {
                 label: "Admin",
