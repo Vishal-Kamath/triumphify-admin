@@ -109,7 +109,7 @@ const LeadsActionButton: FC<{ table: Table<any> }> = ({ table }) => {
   function onSubmit(values: TriggerActionType) {
     setLoading(true);
     axios
-      .post(`${process.env.ENDPOINT}/api/leads/action/trigger`, values, {
+      .post(`${process.env.ENDPOINT}/api/leads/actions/trigger`, values, {
         headers: {
           "Content-Type": "application/json",
         },
