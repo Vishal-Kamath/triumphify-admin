@@ -5,6 +5,7 @@ import ReactQueryProvider from "@/components/providers/reactquery.provider";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import TimeLogProvider from "@/components/providers/time.log.provider";
+import RedirectProvider from "@/components/providers/redirect.provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +23,9 @@ export default function RootLayout({
     <html lang="en">
       <ReactQueryProvider>
         <body className={cn(inter.className, "min-h-screen h-full")}>
-          <TimeLogProvider>{children}</TimeLogProvider>
+          <RedirectProvider>
+            <TimeLogProvider>{children}</TimeLogProvider>
+          </RedirectProvider>
           <Toaster />
         </body>
       </ReactQueryProvider>
