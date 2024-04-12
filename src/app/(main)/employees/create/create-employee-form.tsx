@@ -130,7 +130,10 @@ const CreateEmployeeForm: FC = () => {
             <FormItem className="w-full">
               <FormLabel className="text-black">Role</FormLabel>
               <FormControl>
-                <Select onValueChange={field.onChange}>
+                <Select
+                  onValueChange={(value) => value && field.onChange(value)}
+                  value={field.value}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Role" />
                   </SelectTrigger>
