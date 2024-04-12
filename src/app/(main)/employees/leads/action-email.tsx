@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { useActions } from "@/lib/lead";
+import { invalidateAllActions, useActions } from "@/lib/lead";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Table } from "@tanstack/react-table";
@@ -135,6 +135,7 @@ const LeadsActionButton: FC<{ table: Table<any> }> = ({ table }) => {
       .then((res) => {
         setLoading(false);
         form.reset();
+        invalidateAllActions();
         setDialogOpen(false);
         toast({
           title: res.data.title || "Success",
