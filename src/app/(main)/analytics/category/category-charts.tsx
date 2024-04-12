@@ -6,7 +6,7 @@ import { CategorySalesReturnType, useCategorySales } from "@/lib/sales";
 import CategoryLineChart from "./line-chart";
 import CategoryBarChart from "./bar-chart";
 import { SelectMonth, months } from "@/components/misc/select-month";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, RefreshCw } from "lucide-react";
 import { dateFormater } from "@/utils/dateFormater";
 import { convertUTCDateToLocalDate } from "@/lib/utils";
 import {
@@ -19,6 +19,7 @@ import {
 import { useCategories } from "@/lib/categories";
 import { Category } from "@/@types/category";
 import CategorySalesAdoption from "./adoption";
+import { Button } from "@/components/ui/button";
 
 const CategoryCharts: FC = () => {
   const date = new Date();
@@ -48,12 +49,11 @@ const CategoryCharts: FC = () => {
     "history" | "cancelled" | "returned"
   >("history");
 
-  const { data: salesData, isLoading } = useCategorySales(
-    chartType,
-    category?.id || "",
-    month,
-    year
-  );
+  const {
+    data: salesData,
+    isLoading,
+    refetch,
+  } = useCategorySales(chartType, category?.id || "", month, year);
 
   if (isLoading || isLoading || isCategoryLoading) return <div>Loading...</div>;
 
@@ -103,6 +103,13 @@ const CategoryCharts: FC = () => {
               </span>
               <ChevronsUpDown className="h-4 w-4" />
             </SelectMonth>
+            <Button
+              variant="secondary"
+              className="group active:bg-purple-100"
+              onClick={() => refetch()}
+            >
+              <RefreshCw className="h-3 w-3 group-active:animate-spin " />
+            </Button>
           </div>
         </div>
       </div>
