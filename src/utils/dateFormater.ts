@@ -14,6 +14,35 @@ const months = [
 ];
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+export function dateFormaterNotUTC(
+  date: Date,
+  time = false,
+  ampm = false,
+  timeZone = "UTC" // Adjust to desired time zone, e.g., "America/New_York"
+) {
+  date.toLocaleString("en-US", { timeZone }); // Apply the time zone adjustment
+  const day = days[date.getDay()];
+  const dayNumber = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+  const formattedDate = `${day}, ${dayNumber}${getDaySuffix(dayNumber)} ${month} ${year}`;
+
+  if (time) {
+    if (ampm) {
+      const hours = date.getHours();
+      const meridiem = hours >= 12 ? "PM" : "AM";
+      const formattedHours = (hours % 12 || 12).toString().padStart(2, "0");
+      const minutes = date.getMinutes().toString().padStart(2, "0");
+      return `${formattedDate} at ${formattedHours}:${minutes} ${meridiem}`;
+    } else {
+      const hours = date.getHours().toString().padStart(2, "0");
+      const minutes = date.getMinutes().toString().padStart(2, "0");
+      return `${formattedDate} ${hours}:${minutes}`;
+    }
+  }
+  return formattedDate;
+}
+
 export function dateFormater(
   date: Date,
   time: boolean = false,

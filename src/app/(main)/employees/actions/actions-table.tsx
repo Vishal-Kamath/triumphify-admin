@@ -100,7 +100,7 @@ const columns: ColumnDef<Action>[] = [
     accessorKey: "body",
     cell(props) {
       return (
-        <div className="truncate max-w-[300px]">
+        <div className="text-wrap max-h-28 overflow-y-auto max-w-[300px] scrollbar-thin">
           {props.row.getValue("body")}
         </div>
       );

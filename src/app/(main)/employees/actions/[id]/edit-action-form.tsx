@@ -104,16 +104,6 @@ const EditActionForm: FC = () => {
         className="flex flex-col gap-6 max-w-md w-full"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <div className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold">Edit Action</h2>
-          <Link
-            href={"/employees/actions"}
-            className="flex gap-1 hover:text-slate-900 text-slate-600 underline items-center text-xs"
-          >
-            <ArrowLeft className="size-3" />
-            <span>Back</span>
-          </Link>
-        </div>
         <FormField
           control={form.control}
           name="title"

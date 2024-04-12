@@ -28,5 +28,8 @@ interface ActionLog {
   created_at: Date;
   updated_at: Date | null;
   action_id: string;
-  receivers: unknown;
+  receivers: {
+    userName: string;
+    email: string;
+  }[];
 }
