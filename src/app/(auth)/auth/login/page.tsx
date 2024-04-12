@@ -64,6 +64,7 @@ const LoginPage: FC = () => {
         invalidateAllPrivilages();
         login();
         if (res.data.redirect !== "/") return router.replace(res.data.redirect);
+        router.replace("/");
       })
       .catch((err) => {
         setLoading(false);
