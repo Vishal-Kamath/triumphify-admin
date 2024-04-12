@@ -43,3 +43,6 @@ export const useActions = () =>
     staleTime: 1000 * 60 * 15,
     refetchInterval: 1000 * 3,
   });
+
+export const invalidateAllActions = () =>
+  queryClient.invalidateQueries({ queryKey: ["leads", "actions"] });

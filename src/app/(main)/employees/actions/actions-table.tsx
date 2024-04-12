@@ -20,7 +20,63 @@ import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import DataTableToolbar from "@/components/data-table/data-table-toolbar";
 import DataTableExtract from "@/components/data-table/data-table-extract";
-import { useActions } from "@/lib/lead";
+import { invalidateAllActions, useActions } from "@/lib/lead";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { PencilLine, Trash2 } from "lucide-react";
+import ConfirmDelete from "@/components/misc/confirmDelete";
+import { cn } from "@/lib/utils";
+import { AiOutlineLoading } from "react-icons/ai";
+import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
+
+const DeleteActionsButton: FC<{ actionId: string; actionName: string }> = ({
+  actionId,
+  actionName,
+}) => {
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+
+  function deleteAction() {
+    setLoading(true);
+    axios
+      .delete(`${process.env.ENDPOINT}/api/leads/actions/${actionId}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      })
+      .then((res) => {
+        setLoading(false);
+        invalidateAllActions();
+        toast({
+          title: res.data.title,
+          description: res.data.description,
+          variant: res.data.type,
+        });
+      })
+      .catch((err) => {
+        setLoading(false);
+        toast({
+          title: err?.response?.data?.title || "Error",
+          description: err?.response?.data?.description,
+          variant: err?.response?.data?.type || "error",
+        });
+      });
+  }
+
+  return (
+    <ConfirmDelete
+      className={cn(
+        buttonVariants({ variant: "ghost" }),
+        "text-slate-500 size-9 p-0 flex justify-center items-center hover:text-red-800 hover:bg-red-50"
+      )}
+      confirmText={actionName}
+      deleteFn={deleteAction}
+    >
+      <Trash2 className="size-4" />
+    </ConfirmDelete>
+  );
+};
 
 const columns: ColumnDef<Action>[] = [
   {
@@ -63,6 +119,25 @@ const columns: ColumnDef<Action>[] = [
       row.getValue("updated_at")
         ? dateFormater(new Date(row.getValue("updated_at")))
         : "N/A",
+  },
+  {
+    header: "Actions",
+    id: "actions",
+    cell: ({ row }) => (
+      <div className="flex gap-2">
+        <Button
+          variant="ghost"
+          className="text-slate-500 size-9 p-0 flex justify-center items-center hover:text-slate-800"
+          onClick={() => alert(`Edit ${row.getValue("title")}`)}
+        >
+          <PencilLine className="size-4" />
+        </Button>
+        <DeleteActionsButton
+          actionId={row.original.id}
+          actionName={row.original.title}
+        />
+      </div>
+    ),
   },
 ];
 
