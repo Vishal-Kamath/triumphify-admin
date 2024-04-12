@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { MoveLeft, PencilLine } from "lucide-react";
 import ProductVariations from "./product-variations";
-import ProductReport from "./product-report";
 import { Separator } from "@/components/ui/separator";
+import ProductCharts from "./product-charts";
 
 const ProductsDisplaySection: FC = () => {
   const id = useParams()["id"] as string;
@@ -50,7 +50,7 @@ const ProductsDisplaySection: FC = () => {
           <span>Edit</span>
         </Link>
       </div>
-      <ProductReport type="history" />
+      <ProductCharts />
 
       <div className="flex flex-col gap-2">
         <h2 className="text-xl font-semibold">Product Details</h2>

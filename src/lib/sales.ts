@@ -92,35 +92,50 @@ export const useCategorySales = (
     staleTime: 1000 * 60 * 15,
   });
 
-interface ProductSalesType {
-  product_id: string;
-  product_name: string;
-  product_images: string[];
-  total_units_sold: string;
-  total_discounted_price: string;
-  total_sales: string;
-}
-const getProductSales = (
-  type: "history" | "cancelled" | "returned",
-  start: Date,
-  end: Date
-): Promise<ProductSalesType[] & { type: string }> =>
-  axios
-    .get<{ data: ProductSalesType[] & { type: string } }>(
-      `${process.env.ENDPOINT}/api/sales/product?start=${start}&end=${end}&type=${type}`,
-      { withCredentials: true }
-    )
-    .then((res) => res.data.data)
-    .catch((err) => err.response.data);
 
-export const useProductSales = (
-  type: "history" | "cancelled" | "returned",
-  start: Date,
-  end: Date
-) =>
-  useQuery({
-    queryKey: ["sales", "product", type, start, end],
-    queryFn: () => getProductSales(type, start, end),
-    retry: 0,
-    staleTime: 1000 * 60 * 15,
-  });
+  export interface ProductSalesType {
+    product_id: string;
+    product_name: string;
+    created_date: Date;
+    total_units_sold: number;
+    total_discounted_price: number;
+    total_sales: number;
+  }
+  export interface ProductTotalSalesType {
+    total_units_sold: number;
+    total_discounted_price: number;
+    total_sales: number;
+    total_revenue: number;
+  }
+
+  export type ProductSalesReturnType = {
+    sales: ProductSalesType[];
+    sales_total: ProductTotalSalesType;
+    previous_sales_total: ProductTotalSalesType;
+  };
+  const getProductSales = (
+    type: "history" | "cancelled" | "returned",
+    productId: string,
+    month: number,
+    year: number
+  ): Promise<ProductSalesReturnType & { type: string }> =>
+    axios
+      .get<{ data: ProductSalesReturnType & { type: string } }>(
+        `${process.env.ENDPOINT}/api/sales/product/${productId}?month=${month}&year=${year}&type=${type}`,
+        { withCredentials: true }
+      )
+      .then((res) => res.data.data)
+      .catch((err) => err.response.data);
+
+  export const useProductSales = (
+    type: "history" | "cancelled" | "returned",
+    productId: string,
+    month: number,
+    year: number
+  ) =>
+    useQuery({
+      queryKey: ["sales", "product", productId, type, month, year],
+      queryFn: () => getProductSales(type, productId, month, year),
+      retry: 0,
+      staleTime: 1000 * 60 * 15,
+    });
