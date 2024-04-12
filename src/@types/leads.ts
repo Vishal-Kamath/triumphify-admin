@@ -10,3 +10,12 @@ interface Lead {
   created_at: Date;
   updated_at: Date | null;
 }
+
+interface Action {
+  title: string;
+  subject: string;
+  body: string;
+  id: string;
+  created_at: Date;
+  updated_at: Date | null;
+}

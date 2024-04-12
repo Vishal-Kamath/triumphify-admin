@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { useActions } from "@/lib/lead";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Table } from "@tanstack/react-table";
@@ -71,6 +72,8 @@ const LeadsActionButton: FC<{ table: Table<any> }> = ({ table }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const { data: actions, isLoading } = useActions();
+
   const form = useForm<TriggerActionType>({
     resolver: zodResolver(TriggerActionSchema),
     defaultValues: {
@@ -84,6 +87,20 @@ const LeadsActionButton: FC<{ table: Table<any> }> = ({ table }) => {
       })),
     },
   });
+
+  function actionChange(value: string) {
+    if (value === "new") {
+      form.setValue("title", "");
+      form.setValue("subject", "");
+      form.setValue("body", "");
+    } else {
+      const action = actions?.find((action) => action.id === value);
+      if (!action) return;
+      form.setValue("title", action.title);
+      form.setValue("subject", action.subject);
+      form.setValue("body", action.body);
+    }
+  }
 
   useEffect(() => {
     form.setValue(
@@ -260,6 +277,7 @@ const LeadsActionButton: FC<{ table: Table<any> }> = ({ table }) => {
                       onOpenChange={(open) => open && setPopupOpen(false)}
                       onValueChange={(value) => {
                         if (!value) return;
+                        actionChange(value);
                         field.onChange(value);
                       }}
                       value={field.value}
@@ -268,6 +286,11 @@ const LeadsActionButton: FC<{ table: Table<any> }> = ({ table }) => {
                         <SelectValue placeholder="Action" />
                       </SelectTrigger>
                       <SelectContent className="isolate z-[1000]">
+                        {actions?.map((action) => (
+                          <SelectItem key={action.id} value={action.id}>
+                            {action.title}
+                          </SelectItem>
+                        ))}
                         <SelectItem value="new">
                           <div className="flex items-center text-slate-800 gap-2">
                             <Plus className="size-4" />

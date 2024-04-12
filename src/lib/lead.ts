@@ -24,3 +24,22 @@ export const useLeads = (status?: Lead["status"]) =>
 
 export const invalidateAllLeads = () =>
   queryClient.invalidateQueries({ queryKey: ["leads"] });
+
+
+const getAllActions = (): Promise<Action[] & { type: string }> =>
+  axios
+    .get<{ data: Action[] & { type: string } }>(
+      `${process.env.ENDPOINT}/api/leads/actions`,
+      { withCredentials: true }
+    )
+    .then((res) => res.data.data)
+    .catch((err) => err.response.data);
+
+export const useActions = () =>
+  useQuery({
+    queryKey: ["leads", "actions"],
+    queryFn: getAllActions,
+    retry: 0,
+    staleTime: 1000 * 60 * 15,
+    refetchInterval: 1000 * 3,
+  });
