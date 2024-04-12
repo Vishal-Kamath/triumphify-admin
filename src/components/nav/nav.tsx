@@ -19,6 +19,7 @@ import {
   BarChart3,
   UserSearch,
   Ticket,
+  ActivitySquare,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -97,6 +98,11 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
           href: "/employees/leads",
           icon: UserSearch,
           notification: nav?.leads,
+        },
+        {
+          label: "Actions",
+          href: "/employees/actions",
+          icon: ActivitySquare,
         },
         {
           label: "Tickets",

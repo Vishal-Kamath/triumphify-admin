@@ -25,7 +25,7 @@ import Link from "next/link";
 import { invalidateAllPrivilages } from "@/lib/privilage";
 import { TimeLogContext } from "@/components/providers/time.log.provider";
 
-const LoginPage: FC<{ inline?: boolean }> = ({ inline }) => {
+const LoginPage: FC = () => {
   const { toast } = useToast();
   const { login } = useContext(TimeLogContext);
   const router = useRouter();
@@ -64,7 +64,6 @@ const LoginPage: FC<{ inline?: boolean }> = ({ inline }) => {
         invalidateAllPrivilages();
         login();
         if (res.data.redirect !== "/") return router.replace(res.data.redirect);
-        if (!inline) return router.replace("/");
       })
       .catch((err) => {
         setLoading(false);
@@ -83,7 +82,7 @@ const LoginPage: FC<{ inline?: boolean }> = ({ inline }) => {
       >
         <div className="flex w-full flex-col items-start gap-2">
           <h2 className="text-2xl font-semibold text-slate-700">
-            {inline ? "You seem to be Logged out" : "Welcome back!"}
+            Welcome back!
           </h2>
           <p className="text-sm text-gray-500">
             To login enter your email and password below.
