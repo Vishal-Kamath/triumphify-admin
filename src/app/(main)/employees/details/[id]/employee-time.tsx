@@ -39,7 +39,10 @@ function formatedTime(time: number) {
 
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-const EmployeeTime: FC<{ employee: Employee }> = ({ employee }) => {
+const EmployeeTime: FC<{ employee: Employee; rate: number }> = ({
+  employee,
+  rate,
+}) => {
   const { data: session, refetch } = useEmployeeSession(employee.id);
 
   const datasets: ChartDataset<"bar">[] = [
@@ -103,17 +106,25 @@ const EmployeeTime: FC<{ employee: Employee }> = ({ employee }) => {
   const avg = Math.ceil(avgArray?.reduce((acc, s) => acc + s.time, 0) || 0);
   const avgTimeString = formatedTime(avg ? avg / avgArray?.length! : 0);
 
+  const totalTime = session?.reduce((acc, sess) => acc + sess.time, 0) || 0;
+  const totalTimeString = formatedTime(totalTime);
+
   return (
     <div className="flex flex-col gap-9 w-full max-w-md">
-      <div className="flex items-start flex-col gap-1 text-lg md:text-xl">
-        <h3 className="text-lg lg:text-xl text-slate-950 font-semibold">
-          Weekly Average
-        </h3>
-        <div className="flex items-center justify-start gap-2">
-          <Clock4 className="size-4 text-green-600" strokeWidth={3} />
-          <span className="text-green-500 text-lg font-bold text-nowrap">
-            {avgTimeString}
-          </span>
+      <div className="flex max-md:flex-col justify-between gap-4">
+        <div className="flex items-start flex-col gap-1 text-lg md:text-xl">
+          <h3 className="text-lg lg:text-xl text-slate-950 font-semibold">
+            Weekly Total Time
+          </h3>
+          <div className="flex items-center justify-start gap-2">
+            <Clock4 className="size-4 text-green-600" strokeWidth={3} />
+            <span className="text-green-500 text-lg font-bold text-nowrap">
+              {totalTimeString}
+            </span>
+          </div>
+        </div>
+        <div className="pt-3 font-medium">
+          &#36;{Number((rate * totalTime) / 3600).toFixed(2)}
         </div>
       </div>
       <Bar

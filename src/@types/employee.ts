@@ -4,6 +4,7 @@ export type Employee = {
   username: string | null;
   role: "admin" | "employee" | "superadmin";
   status: "active" | "deactive";
+  rate: number;
   created_at: Date;
   updated_at: Date | null;
 };

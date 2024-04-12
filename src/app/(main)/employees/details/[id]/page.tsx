@@ -2,20 +2,20 @@
 
 import { useEmployee } from "@/lib/employee";
 import { useParams } from "next/navigation";
-import { FC } from "react";
+import { FC, useState } from "react";
 import EmployeeDetailsForm from "./employee-details-form";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
 import ActivateDeactivateEmployee from "./activate-deactivate-employee";
 import { useMe } from "@/lib/auth";
 import TabComponent from "@/components/misc/component";
 import PrivilageProvider from "@/components/providers/privilage.provider";
 import EmployeeTime from "./employee-time";
+import EmployeeRateForm from "./rate-form";
 
 const EmpolyeDetails: FC = () => {
   const id = useParams()["id"] as string;
+  const [rate, setRate] = useState(0);
 
   const { data: me } = useMe();
   const { data: employee, isLoading } = useEmployee(id);
@@ -42,9 +42,12 @@ const EmpolyeDetails: FC = () => {
         </div>
 
         <div className="flex max-w-lg flex-col gap-9 w-full min-w-[25rem]">
-          <EmployeeTime employee={employee} />
+          <EmployeeTime rate={rate} employee={employee} />
           {me && me.role === "superadmin" ? (
-            <ActivateDeactivateEmployee employee={employee} />
+            <>
+              <EmployeeRateForm setRate={setRate} employee={employee} />
+              <ActivateDeactivateEmployee employee={employee} />
+            </>
           ) : null}
         </div>
       </TabComponent>
