@@ -25,9 +25,9 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { PencilLine, Trash2 } from "lucide-react";
 import ConfirmDelete from "@/components/misc/confirmDelete";
 import { cn } from "@/lib/utils";
-import { AiOutlineLoading } from "react-icons/ai";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
+import Link from "next/link";
 
 const DeleteActionsButton: FC<{ actionId: string; actionName: string }> = ({
   actionId,
@@ -125,13 +125,15 @@ const columns: ColumnDef<Action>[] = [
     id: "actions",
     cell: ({ row }) => (
       <div className="flex gap-2">
-        <Button
-          variant="ghost"
-          className="text-slate-500 size-9 p-0 flex justify-center items-center hover:text-slate-800"
-          onClick={() => alert(`Edit ${row.getValue("title")}`)}
+        <Link
+          href={`/employees/actions/${row.original.id}`}
+          className={cn(
+            buttonVariants({ variant: "ghost" }),
+            "text-slate-500 size-9 p-0 flex justify-center items-center hover:text-slate-800"
+          )}
         >
           <PencilLine className="size-4" />
-        </Button>
+        </Link>
         <DeleteActionsButton
           actionId={row.original.id}
           actionName={row.original.title}

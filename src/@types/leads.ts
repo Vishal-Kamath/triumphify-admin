@@ -19,3 +19,14 @@ interface Action {
   created_at: Date;
   updated_at: Date | null;
 }
+
+interface ActionLog {
+  id: string;
+  title: string;
+  subject: string;
+  body: string;
+  created_at: Date;
+  updated_at: Date | null;
+  action_id: string;
+  receivers: unknown;
+}

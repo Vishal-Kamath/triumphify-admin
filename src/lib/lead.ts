@@ -44,5 +44,29 @@ export const useActions = () =>
     refetchInterval: 1000 * 3,
   });
 
+interface ActionReturnType {
+  action: Action;
+  logs: ActionLog[];
+}
+const getAllAction = (
+  id: string
+): Promise<ActionReturnType & { type: string }> =>
+  axios
+    .get<{ data: ActionReturnType & { type: string } }>(
+      `${process.env.ENDPOINT}/api/leads/actions/${id}`,
+      { withCredentials: true }
+    )
+    .then((res) => res.data.data)
+    .catch((err) => err.response.data);
+
+export const useAction = (id: string) =>
+  useQuery({
+    queryKey: ["leads", "actions", id],
+    queryFn: () => getAllAction(id),
+    retry: 0,
+    staleTime: 1000 * 60 * 15,
+    refetchInterval: 1000 * 3,
+  });
+
 export const invalidateAllActions = () =>
   queryClient.invalidateQueries({ queryKey: ["leads", "actions"] });
