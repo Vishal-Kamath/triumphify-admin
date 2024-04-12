@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import { FC } from "react";
 // import CategorySalesReport from "./category-report";
-import ProductSalesReport from "./product-report";
+// import ProductSalesReport from "./product-report";
 
 const AnalyticsPage: FC = () => {
   return (
@@ -13,7 +13,7 @@ const AnalyticsPage: FC = () => {
           <h2 className="text-lg font-semibold">Product Sales</h2>
           <Separator />
         </div>
-        <ProductSalesReport type="history" />
+        {/* <ProductSalesReport type="history" /> */}
       </div>
       <div className="flex flex-col gap-9">
         <div className="flex flex-col gap-2">
