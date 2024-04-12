@@ -35,6 +35,9 @@ import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 import { AiOutlineLoading } from "react-icons/ai";
 import ConfirmDelete from "@/components/misc/confirmDelete";
+import LeadsActionButton from "./action-email";
+import { Checkbox } from "@/components/ui/checkbox";
+import { capitalize } from "lodash";
 
 const statusStyles = {
   new: "bg-blue-50 border-1 border-blue-500 hover:bg-blue-50 text-blue-600 capitalize",
@@ -104,6 +107,28 @@ const DeleteLeadsButton: FC<{ leadId: string; leadName: string }> = ({
 };
 
 const columns: ColumnDef<Lead>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     header: ({ column }) => {
       return (
@@ -200,6 +225,8 @@ const LeadsTable: FC = () => {
 
   const { data: leads, isLoading, refetch } = useLeads();
 
+  const sourceFilters = Array.from(new Set(leads?.map((lead) => lead.source)));
+
   const table = useReactTable({
     data: leads || [],
     columns,
@@ -261,6 +288,15 @@ const LeadsTable: FC = () => {
             },
           ]}
         />
+        <DataTableFacetedFilter
+          title="Source"
+          column={table.getColumn("source")}
+          options={sourceFilters.map((source) => ({
+            label: capitalize(source),
+            value: source,
+          }))}
+        />
+        <LeadsActionButton table={table} />
       </div>
       <DataTable table={table} columnSpan={columns.length} />
       <DataTablePagination table={table} />
