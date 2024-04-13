@@ -78,6 +78,7 @@ const LeadsTable: FC = () => {
       {
         header: "Email",
         accessorKey: "email",
+        enableHiding: false,
       },
       {
         header: "Mobile Number",
