@@ -4,7 +4,6 @@ import { isServer } from "@tanstack/react-query";
 import { FC, ReactNode } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { usePrivilage } from "@/lib/privilage";
-import Logo from "../misc/logo";
 import Link from "next/link";
 import { ShieldAlert } from "lucide-react";
 

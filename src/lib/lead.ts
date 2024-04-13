@@ -19,7 +19,6 @@ export const useLeads = (status?: Lead["status"]) =>
     queryFn: () => getleads(status),
     retry: 0,
     staleTime: 1000 * 60 * 15,
-    refetchInterval: 1000 * 3,
   });
 
 export const invalidateAllLeads = () =>
