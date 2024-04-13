@@ -2,12 +2,13 @@
 
 import { useMe } from "@/lib/auth";
 import { isServer } from "@tanstack/react-query";
-import { redirect, usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FC, ReactNode, useEffect, useRef } from "react";
 
 const RedirectProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const pathname = usePathname();
   const { data: me, isLoading } = useMe();
+  const router = useRouter();
 
   const isFirstVisit = useRef(true);
 
@@ -21,7 +22,7 @@ const RedirectProvider: FC<{ children: ReactNode }> = ({ children }) => {
       me.role === "superadmin"
     ) {
       isFirstVisit.current = false;
-      redirect("/analytics");
+      router.replace("/analytics");
     }
   }, [me]);
 
