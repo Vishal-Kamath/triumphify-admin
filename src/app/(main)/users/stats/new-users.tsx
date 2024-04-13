@@ -14,7 +14,6 @@ import {
   ChartData,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { dateFormater } from "@/utils/dateFormater";
 import { SelectMonth, months } from "@/components/misc/select-month";
 import { ChevronsUpDown } from "lucide-react";
 
@@ -83,6 +82,7 @@ const NewUsers: FC = () => {
         <SelectMonth
           month={tempMonth}
           year={tempYear}
+          align="end"
           onMonthChange={setTempMonth}
           onYearChange={setTempYear}
           open={open}

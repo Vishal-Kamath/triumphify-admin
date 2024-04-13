@@ -6,9 +6,11 @@ import PrivilageProvider from "@/components/providers/privilage.provider";
 const UsersPage: FC = () => {
   return (
     <PrivilageProvider path="/users/accounts">
-      <main className="flex h-full w-full flex-col gap-6 bg-white p-6 pb-24">
-        <h2 className="text-lg font-semibold leading-none">User Details</h2>
-        <Separator />
+      <main className="flex h-full w-full flex-col gap-2 bg-white p-6 pb-24">
+        <div className="flex flex-col gap-6">
+          <h2 className="text-lg font-semibold leading-none">User Details</h2>
+          <Separator />
+        </div>
         <div className="h-full">
           <UserTable />
         </div>

@@ -214,7 +214,7 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
           />
         </Link>
       </header>
-      <div className="isolate flex h-full min-h-screen pt-14 lg:pl-[15rem]">
+      <div className="flex h-full min-h-screen pt-14 lg:pl-[15rem]">
         <nav
           className={cn(
             "fixed left-0 top-0 z-50 flex max-h-screen min-h-screen w-full max-w-[15rem] flex-shrink-0 flex-col overflow-y-auto border-r-1 border-slate-300 bg-white pb-24 pt-14 transition-all duration-200 ease-in-out scrollbar-none",
