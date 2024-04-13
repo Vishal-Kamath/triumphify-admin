@@ -1,69 +1,34 @@
 import { Employee } from "@/@types/employee";
-import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { dateFormater } from "@/utils/dateFormater";
-import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
-import Link from "next/link";
-import { RxCaretSort } from "react-icons/rx";
+import { MRT_ColumnDef } from "material-react-table";
 
-export const columns: ColumnDef<Employee>[] = [
+export const columns: MRT_ColumnDef<Employee>[] = [
   {
-    header: ({ column }) => {
-      return (
-        <button
-          className="flex items-center gap-2 border-none bg-transparent p-0 outline-none focus:outline-none"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Username
-          <RxCaretSort className="ml-2 h-4 w-4" />
-        </button>
-      );
-    },
+    header: "Username",
     accessorKey: "username",
     enableHiding: false,
     enableSorting: true,
   },
   {
-    header: ({ column }) => {
-      return (
-        <button
-          className="flex items-center gap-2 border-none bg-transparent p-0 outline-none focus:outline-none"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <RxCaretSort className="ml-2 h-4 w-4" />
-        </button>
-      );
-    },
+    header: "Email",
     accessorKey: "email",
   },
   {
     header: "Created At",
     accessorKey: "created_at",
-    cell: ({ row }) => dateFormater(new Date(row.getValue("created_at"))),
+    filterVariant: "date-range",
+    accessorFn: (originalRow) => new Date(originalRow.created_at),
+    Cell: ({ row }) => dateFormater(new Date(row.getValue("created_at"))),
   },
   {
     header: "Updated At",
     accessorKey: "updated_at",
-    cell: ({ row }) =>
-      row.getValue("updated_at")
+    filterVariant: "date-range",
+    accessorFn: (originalRow) =>
+      originalRow.updated_at ? new Date(originalRow.updated_at) : "null",
+    Cell: ({ row }) =>
+      row.getValue("updated_at") !== "null"
         ? dateFormater(new Date(row.getValue("updated_at")))
         : "N/A",
-  },
-  {
-    accessorKey: "id",
-    header: "",
-    enableHiding: false,
-    enableSorting: false,
-    cell: ({ row }) => (
-      <Link
-        href={`/employees/details/${row.getValue("id")}`}
-        className={cn(buttonVariants({ variant: "ghost" }))}
-      >
-        <MoreHorizontal />
-      </Link>
-    ),
   },
 ];

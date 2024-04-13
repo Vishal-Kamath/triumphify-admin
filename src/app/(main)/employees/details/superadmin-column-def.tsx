@@ -3,47 +3,28 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { dateFormater } from "@/utils/dateFormater";
-import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import { MRT_ColumnDef } from "material-react-table";
 import Link from "next/link";
-import { RxCaretSort } from "react-icons/rx";
 
-export const columns: ColumnDef<Employee>[] = [
+export const columns: MRT_ColumnDef<Employee>[] = [
   {
-    header: ({ column }) => {
-      return (
-        <button
-          className="flex items-center gap-2 border-none bg-transparent p-0 outline-none focus:outline-none"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Username
-          <RxCaretSort className="ml-2 h-4 w-4" />
-        </button>
-      );
-    },
+    header: "Username",
     accessorKey: "username",
     enableHiding: false,
     enableSorting: true,
   },
   {
-    header: ({ column }) => {
-      return (
-        <button
-          className="flex items-center gap-2 border-none bg-transparent p-0 outline-none focus:outline-none"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <RxCaretSort className="ml-2 h-4 w-4" />
-        </button>
-      );
-    },
+    header: "Email",
     accessorKey: "email",
   },
   {
     header: "Role",
     id: "role",
     accessorKey: "role",
-    cell: ({ row }) => {
+    filterVariant: "select",
+    filterSelectOptions: ["Admin", "Employee"],
+    Cell: ({ row }) => {
       return (
         <Badge
           className={cn(
@@ -59,15 +40,60 @@ export const columns: ColumnDef<Employee>[] = [
     },
   },
   {
+    header: "Rate ($/hr)",
+    accessorKey: "rate",
+    filterVariant: "range-slider",
+    filterFn: "betweenInclusive",
+    muiFilterSliderProps: ({ table }) => {
+      let min = 0;
+      let max = 0;
+      table.getCoreRowModel().rows.forEach((row) => {
+        if (row.original.rate < min) min = row.original.rate;
+        if (row.original.rate > max) max = row.original.rate;
+      });
+
+      return {
+        marks: true,
+        min,
+        max,
+        valueLabelFormat: (value) =>
+          value.toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+          }),
+      };
+    },
+    accessorFn: (originalRow) => Number(originalRow.rate),
+    Cell: ({ cell }) =>
+      cell.getValue<number>().toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+      }),
+  },
+  {
+    header: "Status",
+    accessorFn: (originalRow) =>
+      originalRow.status === "active" ? "true" : "false", //must be strings
+    id: "isActive",
+    filterVariant: "checkbox",
+    Cell: ({ cell }) => (cell.getValue() === "true" ? "Active" : "Inactive"),
+    size: 170,
+  },
+  {
     header: "Created At",
     accessorKey: "created_at",
-    cell: ({ row }) => dateFormater(new Date(row.getValue("created_at"))),
+    filterVariant: "date-range",
+    accessorFn: (originalRow) => new Date(originalRow.created_at),
+    Cell: ({ row }) => dateFormater(new Date(row.getValue("created_at"))),
   },
   {
     header: "Updated At",
     accessorKey: "updated_at",
-    cell: ({ row }) =>
-      row.getValue("updated_at")
+    filterVariant: "date-range",
+    accessorFn: (originalRow) =>
+      originalRow.updated_at ? new Date(originalRow.updated_at) : "null",
+    Cell: ({ row }) =>
+      row.getValue("updated_at") !== "null"
         ? dateFormater(new Date(row.getValue("updated_at")))
         : "N/A",
   },
@@ -76,7 +102,8 @@ export const columns: ColumnDef<Employee>[] = [
     header: "",
     enableHiding: false,
     enableSorting: false,
-    cell: ({ row }) => (
+    enableColumnFilter: false,
+    Cell: ({ row }) => (
       <Link
         href={`/employees/details/${row.getValue("id")}`}
         className={cn(buttonVariants({ variant: "ghost" }))}

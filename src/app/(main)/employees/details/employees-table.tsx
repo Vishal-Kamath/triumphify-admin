@@ -1,93 +1,153 @@
 "use client";
 
-import {
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { FC, useState } from "react";
-import DataTable from "@/components/data-table/data-table";
-import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
-import { DataTablePagination } from "@/components/data-table/data-table-pagination";
-import DataTableToolbar from "@/components/data-table/data-table-toolbar";
-import DataTableExtract from "@/components/data-table/data-table-extract";
+import { FC, useMemo } from "react";
 import { useEmployees } from "@/lib/employee";
-import { DataTableFacetedFilter } from "@/components/data-table/data-table-faceted-filter";
 import { useMe } from "@/lib/auth";
 import { columns as superadminColumns } from "./superadmin-column-def";
 import { columns as adminColumns } from "./admin-column-def";
+import { mkConfig, generateCsv, download } from "export-to-csv";
+import {
+  MRT_ColumnDef,
+  MRT_Row,
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
+import { Employee } from "@/@types/employee";
+import { Button, IconButton, Tooltip } from "@mui/material";
+import { Refresh, FileDownload } from "@mui/icons-material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+
+const csvConfig = mkConfig({
+  fieldSeparator: ",",
+  decimalSeparator: ".",
+  filename: "users-data",
+  useKeysAsHeaders: true,
+});
 
 const EmployeesTable: FC = () => {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
   const { data: me, isLoading: isMeLoading } = useMe();
-  const { data: employees, isLoading, refetch } = useEmployees();
+  const { data: employees, isLoading, refetch, isRefetching } = useEmployees();
 
-  const columns = me?.role === "superadmin" ? superadminColumns : adminColumns;
+  const columns = useMemo<MRT_ColumnDef<Employee>[]>(
+    () => (me?.role === "superadmin" ? superadminColumns : adminColumns),
+    []
+  );
 
-  const table = useReactTable({
-    data: employees || [],
+  const handleExportRows = (rows: MRT_Row<Employee>[]) => {
+    const rowData = rows.map((row) => row.original);
+    const csv = generateCsv(csvConfig)(rowData);
+    download(csvConfig)(csv);
+  };
+
+  const handleExportData = () => {
+    if (!employees) return;
+    const csv = generateCsv(csvConfig)(employees);
+    download(csvConfig)(csv);
+  };
+
+  const table = useMaterialReactTable({
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
+    data: employees || [],
+    muiTablePaperProps: ({ table }) => ({
+      elevation: 0,
+      style: {
+        zIndex: table.getState().isFullScreen ? 1000 : undefined,
+      },
+    }),
+    renderTopToolbarCustomActions: ({ table }) => (
+      <div className="flex gap-2">
+        {me?.role === "superadmin" ? (
+          <>
+            <Button
+              onClick={handleExportData}
+              className="max-md:hidden"
+              startIcon={<FileDownload />}
+              sx={{
+                "@media (max-width: 768px)": {
+                  display: "none",
+                },
+              }}
+            >
+              Export All Data
+            </Button>
+            <Button
+              disabled={
+                !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+              }
+              onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+              startIcon={<FileDownload />}
+              sx={{
+                "@media (max-width: 768px)": {
+                  display: "none",
+                },
+              }}
+            >
+              Export Selected Rows
+            </Button>
+            <Tooltip
+              sx={{
+                "display": "none",
+                "@media (max-width: 768px)": {
+                  display: "block",
+                },
+                "height": "40px",
+              }}
+              arrow
+              title="Export All Data"
+            >
+              <IconButton onClick={() => handleExportData()}>
+                <FileDownload className="-translate-y-2" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip
+              sx={{
+                "display": "none",
+                "@media (max-width: 768px)": {
+                  display: "block",
+                },
+                "height": "40px",
+              }}
+              arrow
+              title="Export Selected Rows"
+            >
+              <IconButton
+                disabled={
+                  !table.getIsSomeRowsSelected() &&
+                  !table.getIsAllRowsSelected()
+                }
+                onClick={() =>
+                  handleExportRows(table.getSelectedRowModel().rows)
+                }
+              >
+                <FileDownload className="-translate-y-2" />
+              </IconButton>
+            </Tooltip>
+          </>
+        ) : null}
+        <Tooltip arrow title="Refresh Data">
+          <IconButton
+            sx={{
+              height: "40px",
+            }}
+            onClick={() => refetch()}
+          >
+            <Refresh />
+          </IconButton>
+        </Tooltip>
+      </div>
+    ),
     state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
+      showProgressBars: isRefetching,
+      isLoading: isLoading || isMeLoading,
     },
+    enableRowSelection: me?.role === "superadmin",
   });
 
-  return isLoading ? (
-    <DataTableSkeleton columnCount={columns.length} />
-  ) : (
-    <div className="flex w-full flex-col gap-4">
-      <DataTableToolbar
-        table={table}
-        searchUsing="username"
-        actionNodes={
-          me?.role === "superadmin" ? (
-            <DataTableFacetedFilter
-              column={table.getColumn("role")}
-              title={"Role"}
-              options={[
-                {
-                  label: "Admin",
-                  value: "admin",
-                },
-                {
-                  label: "Employee",
-                  value: "employee",
-                },
-              ]}
-            />
-          ) : null
-        }
-        dataTableExtract={
-          me?.role === "superadmin" ? (
-            <DataTableExtract data={employees || []} name="employees" />
-          ) : null
-        }
-        refetch={refetch}
-      />
-      <DataTable table={table} columnSpan={columns.length} />
-      <DataTablePagination table={table} />
-    </div>
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <MaterialReactTable table={table} />
+    </LocalizationProvider>
   );
 };
 
