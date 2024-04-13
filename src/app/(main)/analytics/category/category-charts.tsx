@@ -53,7 +53,7 @@ const CategoryCharts: FC = () => {
     data: salesData,
     isLoading,
     refetch,
-  } = useCategorySales(chartType, category?.id || "", month, year);
+  } = useCategorySales(chartType, category?.id || "placeholder", month, year);
 
   if (isLoading || isLoading || isCategoryLoading) return <div>Loading...</div>;
 
