@@ -21,7 +21,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 const csvConfig = mkConfig({
   fieldSeparator: ",",
   decimalSeparator: ".",
-  filename: "users-data",
+  filename: "employees-data",
   useKeysAsHeaders: true,
 });
 

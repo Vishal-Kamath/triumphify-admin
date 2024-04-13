@@ -32,7 +32,8 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Table } from "@tanstack/react-table";
 import axios from "axios";
-import { ChevronDown, Plus, Trash2, X } from "lucide-react";
+import { Activity, ChevronDown, Plus, Trash2, X } from "lucide-react";
+import { MRT_TableInstance } from "material-react-table";
 import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineLoading } from "react-icons/ai";
@@ -60,7 +61,10 @@ const TriggerActionSchema = z.object({
 });
 type TriggerActionType = z.infer<typeof TriggerActionSchema>;
 
-const LeadsActionButton: FC<{ table: Table<any> }> = ({ table }) => {
+const LeadsActionButton: FC<{
+  disabled?: boolean;
+  table: MRT_TableInstance<Lead>;
+}> = ({ table, disabled }) => {
   const { toast } = useToast();
   const selectedRowsModel = table.getFilteredSelectedRowModel();
 
@@ -162,8 +166,17 @@ const LeadsActionButton: FC<{ table: Table<any> }> = ({ table }) => {
         !open && setPopupOpen(false);
       }}
     >
-      <DialogTrigger className={buttonVariants({ variant: "outline" })}>
-        Action
+      <DialogTrigger
+        disabled={disabled}
+        className={cn(
+          "px-1 md:px-2 py-1 text-sm gap-2 flex items-center rounded-sm",
+          !!disabled
+            ? "text-gray-400"
+            : "text-gray-500 md:text-blue-700 hover:bg-blue-50"
+        )}
+      >
+        <Activity className="size-4" strokeWidth={3} />
+        <span className="max-md:hidden">ACTION</span>
       </DialogTrigger>
       <DialogContent
         closeable

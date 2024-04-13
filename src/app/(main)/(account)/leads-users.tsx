@@ -23,7 +23,6 @@ import DataTableToolbar from "@/components/data-table/data-table-toolbar";
 import DataTable from "@/components/data-table/data-table";
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
-import AssignLeadsDropdown from "../employees/leads/assign-lead-dropdown";
 
 const adminColumns: ColumnDef<Lead>[] = [
   {
@@ -50,13 +49,13 @@ const adminColumns: ColumnDef<Lead>[] = [
     header: "Mobile Number",
     accessorKey: "tel",
   },
-  {
-    header: "Assigned to",
-    accessorKey: "assigned",
-    cell: ({ row }) => {
-      return <AssignLeadsDropdown assignedTo={row.original.assigned} />;
-    },
-  },
+  // {
+  //   header: "Assigned to",
+  //   accessorKey: "assigned",
+  //   cell: ({ row }) => {
+  //     return <AssignLeadsDropdown assignedTo={row.original.assigned} />;
+  //   },
+  // },
   {
     header: "Source",
     accessorKey: "source",
