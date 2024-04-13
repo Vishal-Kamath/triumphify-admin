@@ -110,7 +110,7 @@ export const SelectMonth: FC<SelectMonthProps> = ({
             value={year}
             onChange={(e) => changeYear(Number(e.target.value))}
             className={cn(
-              "bg-transparent text-center outline-none border-b-1 border-slate-200 hover:border-slate-300 focus-within:border-slate-600 focus-within:hover:border-slate-600",
+              "bg-transparent w-[7.5rem] text-center outline-none border-b-1 border-slate-200 hover:border-slate-300 focus-within:border-slate-600 focus-within:hover:border-slate-600",
               year > maxYear && "text-red-500 border-red-500"
             )}
           />
