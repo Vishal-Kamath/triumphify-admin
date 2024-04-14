@@ -3,11 +3,11 @@
 import { useMe } from "@/lib/auth";
 import { FC } from "react";
 import WelcomeUserSection from "./welcome";
-import UserTasksSection from "./tasks";
-import LeadsSection from "./leads-users";
+import LeadsSection from "./leads";
 import { Separator } from "@/components/ui/separator";
 import EmployeeDetails from "./(details)/employee-details";
 import EmployeeTime from "./(details)/employee-time";
+import TicketsTable from "./tickets";
 
 const AccountPage: FC = () => {
   const { data: employee, isLoading } = useMe();
@@ -25,9 +25,9 @@ const AccountPage: FC = () => {
           <EmployeeTime />
         </div>
         <Separator />
-        <LeadsSection role={employee.role} />
+        <LeadsSection />
         <Separator />
-        <UserTasksSection />
+        <TicketsTable />
       </div>
     </div>
   );
