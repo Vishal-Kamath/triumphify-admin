@@ -12,7 +12,6 @@ import { Button, IconButton, Tooltip } from "@mui/material";
 import { FileDownload, Refresh } from "@mui/icons-material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { capitalize } from "lodash";
 import Link from "next/link";
 import { ExternalLink, MoreHorizontal } from "lucide-react";
 import TicketStatusDropdown from "./[id]/ticket-status-dropdown";
