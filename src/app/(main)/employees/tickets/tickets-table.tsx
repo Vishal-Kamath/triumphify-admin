@@ -169,7 +169,7 @@ const TicketsTable: FC = () => {
         enableColumnFilter: false,
         Cell: ({ row }) => (
           <Link
-            href={`/users/tickets/${row.original.id}`}
+            href={`/employees/tickets/${row.original.id}`}
             className="flex items-center gap-2"
           >
             <MoreHorizontal className="size-4" />
