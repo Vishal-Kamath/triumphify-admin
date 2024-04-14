@@ -285,6 +285,7 @@ const AdminLeadsTable: FC = () => {
       isLoading,
     },
     enableRowSelection: me?.role === "superadmin",
+    enableFullScreenToggle: false,
   });
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

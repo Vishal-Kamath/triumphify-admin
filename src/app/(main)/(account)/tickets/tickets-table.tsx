@@ -140,6 +140,7 @@ const EmployeeTicketsTable: FC = () => {
       showProgressBars: isRefetching,
       isLoading,
     },
+    enableFullScreenToggle: false,
   });
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

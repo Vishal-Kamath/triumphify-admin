@@ -117,6 +117,7 @@ const EmployeeLeadsTable: FC = () => {
       showProgressBars: isRefetching,
       isLoading,
     },
+    enableFullScreenToggle: false,
   });
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

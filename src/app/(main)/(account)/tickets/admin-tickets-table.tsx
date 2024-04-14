@@ -279,6 +279,7 @@ const AdminTicketsTable: FC = () => {
       isLoading,
     },
     enableRowSelection: me?.role === "superadmin",
+    enableFullScreenToggle: false,
   });
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
