@@ -22,6 +22,7 @@ interface Action {
 
 interface ActionLog {
   id: string;
+  triggered_by: string;
   title: string;
   subject: string;
   body: string;
