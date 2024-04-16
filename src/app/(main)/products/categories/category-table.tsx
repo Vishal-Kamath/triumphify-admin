@@ -9,7 +9,7 @@ import {
 import { FC, useMemo } from "react";
 import { dateFormater } from "@/utils/dateFormater";
 import { Button, IconButton, Tooltip } from "@mui/material";
-import { FileDownload, Refresh } from "@mui/icons-material";
+import { Add, FileDownload, Refresh } from "@mui/icons-material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useMe } from "@/lib/auth";
@@ -165,6 +165,18 @@ const CategoriesTable: FC = () => {
       <div className="flex gap-2">
         {me?.role === "superadmin" ? (
           <>
+            <Link href="/products/categories/create">
+              <Button
+                startIcon={<Add />}
+                sx={{
+                  "@media (max-width: 768px)": {
+                    display: "none",
+                  },
+                }}
+              >
+                Add Category
+              </Button>
+            </Link>
             <Button
               onClick={handleExportData}
               className="max-md:hidden"
@@ -191,6 +203,24 @@ const CategoriesTable: FC = () => {
             >
               Export Selected Rows
             </Button>
+
+            <Link href="/products/categories/create">
+              <Tooltip
+                sx={{
+                  "display": "none",
+                  "@media (max-width: 768px)": {
+                    display: "block",
+                  },
+                  "height": "40px",
+                }}
+                arrow
+                title="Add Category"
+              >
+                <IconButton>
+                  <Add className="-translate-y-2" />
+                </IconButton>
+              </Tooltip>
+            </Link>
             <Tooltip
               sx={{
                 "display": "none",
