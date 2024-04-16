@@ -30,6 +30,7 @@ interface GetOrderById {
   order: Order;
   order_details: OrderDetails;
   all_orders: Order[];
+  tickets: Ticket[];
 }
 const getOrder = (orderId: string): Promise<GetOrderById & { type: string }> =>
   axios

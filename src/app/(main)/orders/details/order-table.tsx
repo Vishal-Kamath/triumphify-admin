@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { capitalize } from "lodash";
 import { useNav } from "@/lib/nav";
+import AvatarElement from "@/components/misc/avatar-element";
 
 const OrdersTable: FC = () => {
   const { data: orders, isLoading, refetch, isRefetching } = useOrders();
@@ -254,6 +255,28 @@ const OrdersTable: FC = () => {
               {row.original.status}
             </span>
           ),
+      },
+      {
+        header: "Users",
+        accessorKey: "user_username",
+        Cell: ({ row }) => (
+          <div className="flex gap-3 min-w-[15rem] items-center">
+            <AvatarElement
+              image={row.original.user_image}
+              username={row.original.user_username || ""}
+            />
+            <div className="flex flex-col gap-1">
+              <h3>{row.original.user_username}</h3>
+              <Link
+                href={`/users/accounts/${row.original.user_id}?redirect=${encodeURIComponent("/orders/details")}`}
+                className="text-xs flex gap-1 text-slate-500 hover:underline hover:text-slate-800"
+              >
+                <span>View User</span>
+                <ExternalLink className="size-3" />
+              </Link>
+            </div>
+          </div>
+        ),
       },
       {
         header: "Created At",

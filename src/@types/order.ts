@@ -1,6 +1,8 @@
 export interface Order {
   id: string;
   user_id: string;
+  user_username: string;
+  user_image: string;
   group_id: string;
 
   notifications: number;
