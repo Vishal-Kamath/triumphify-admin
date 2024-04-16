@@ -1,37 +1,31 @@
 "use client";
 
-import { Category } from "@/@types/category";
-import DataTable from "@/components/data-table/data-table";
-import { DataTablePagination } from "@/components/data-table/data-table-pagination";
-import DataTableToolbar from "@/components/data-table/data-table-toolbar";
-import ConfirmDelete from "@/components/misc/confirmDelete";
-import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
-import { buttonVariants } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { invalidateAllCategories, useCategories } from "@/lib/categories";
-import { cn } from "@/lib/utils";
-import { dateFormater } from "@/utils/dateFormater";
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import axios from "axios";
-import { PencilLine, Plus, Trash2 } from "lucide-react";
+  MRT_ColumnDef,
+  MRT_Row,
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
+import { FC, useMemo } from "react";
+import { dateFormater } from "@/utils/dateFormater";
+import { Button, IconButton, Tooltip } from "@mui/material";
+import { FileDownload, Refresh } from "@mui/icons-material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useMe } from "@/lib/auth";
+import { handleExtract } from "@/utils/extract";
 import Image from "next/image";
+import { invalidateAllCategories, useCategories } from "@/lib/categories";
 import Link from "next/link";
-import { FC, useState } from "react";
-import { RxCaretSort } from "react-icons/rx";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+import { PencilLine, Trash2 } from "lucide-react";
+import ConfirmDelete from "@/components/misc/confirmDelete";
+import { useToast } from "@/components/ui/use-toast";
+import axios from "axios";
+import { Category } from "@/@types/category";
 
-const CategoryTable: FC = () => {
+const CategoriesTable: FC = () => {
   const { toast } = useToast();
 
   const handleDeleteCategory = (id: string) => {
@@ -56,136 +50,210 @@ const CategoryTable: FC = () => {
       });
   };
 
-  const columns: ColumnDef<Category>[] = [
-    {
-      header: "Image",
-      accessorKey: "category_image",
-      cell: ({ row }) => {
-        return row.getValue("category_image") ? (
-          <Image
-            src={row.getValue("category_image")}
-            alt={row.getValue("name")}
-            className="size-14 flex-shrink-0 object-contain"
-            width={200}
-            height={200}
-          />
-        ) : (
-          "N/A"
-        );
-      },
-    },
-    {
-      header: ({ column }) => {
-        return (
-          <button
-            className="flex items-center gap-2 border-none bg-transparent p-0 outline-none focus:outline-none"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Name
-            <RxCaretSort className="ml-2 h-4 w-4" />
-          </button>
-        );
-      },
-      accessorKey: "name",
-      enableHiding: false,
-      enableSorting: true,
-    },
-    {
-      header: "Description",
-      accessorKey: "description",
-      cell: ({ row }) => (
-        <div className="text-xs max-w-sm">
-          {row.getValue("description") || "N/A"}
-        </div>
-      ),
-    },
-    {
-      header: "Created At",
-      accessorKey: "created_at",
-      cell: ({ row }) => dateFormater(new Date(row.getValue("created_at"))),
-    },
-    {
-      header: "Updated At",
-      accessorKey: "updated_at",
-      cell: ({ row }) =>
-        row.getValue("updated_at")
-          ? dateFormater(new Date(row.getValue("updated_at")))
-          : "N/A",
-    },
-    {
-      accessorKey: "id",
-      header: "",
-      enableHiding: false,
-      enableSorting: false,
-      cell: ({ row }) => (
-        <div className="flex">
-          <Link
-            href={`/products/categories/${row.getValue("id")}`}
-            className={cn(buttonVariants({ variant: "ghost" }))}
-          >
-            <PencilLine className="h-4 w-4" />
-          </Link>
-          <ConfirmDelete
-            className="flex aspect-square h-10 w-10 items-center justify-center rounded-md hover:bg-red-100 hover:text-red-500"
-            confirmText={row.getValue("name")}
-            deleteFn={() => handleDeleteCategory(row.getValue("id"))}
-          >
-            <Trash2 className="h-4 w-4" />
-          </ConfirmDelete>
-        </div>
-      ),
-    },
-  ];
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const {
+    data: categories,
+    isLoading,
+    refetch,
+    isRefetching,
+  } = useCategories();
+  const { data: me } = useMe();
 
-  const { data: categories, isLoading, refetch } = useCategories();
+  const handleExportRows = (rows: MRT_Row<Category>[]) => {
+    const rowData = rows.map((row) => row.original);
+    handleExtract("categories-data", rowData);
+  };
 
-  const table = useReactTable({
-    data: categories || [],
+  const handleExportData = () => {
+    if (!categories) return;
+    handleExtract("categories-data", categories);
+  };
+
+  const columns = useMemo<MRT_ColumnDef<Category>[]>(
+    () => [
+      {
+        header: "Image",
+        accessorKey: "category_image",
+        Cell: ({ row }) => {
+          return (row.getValue("category_image") as string[]).length ? (
+            <Image
+              src={row.getValue("category_image")}
+              alt={row.getValue("name")}
+              className="w-full min-h-24 h-full max-w-[10rem]"
+              width={200}
+              height={200}
+            />
+          ) : (
+            "N/A"
+          );
+        },
+        enableHiding: false,
+        enableColumnFilter: false,
+        enableColumnFilterModes: false,
+        enableSorting: false,
+      },
+      {
+        header: "Name",
+        accessorKey: "name",
+        enableHiding: false,
+      },
+      {
+        header: "Description",
+        accessorKey: "description",
+        Cell(props) {
+          return (
+            <div className="text-wrap max-h-28 overflow-y-auto min-w-[300px] max-w-[300px] scrollbar-thin">
+              {props.row.getValue("description")}
+            </div>
+          );
+        },
+      },
+      {
+        header: "Created At",
+        accessorKey: "created_at",
+        filterVariant: "date-range",
+        accessorFn: (originalRow) => new Date(originalRow.created_at),
+        Cell: ({ row }) => dateFormater(new Date(row.getValue("created_at"))),
+      },
+      {
+        header: "Updated At",
+        accessorKey: "updated_at",
+        filterVariant: "date-range",
+        accessorFn: (originalRow) =>
+          originalRow.updated_at ? new Date(originalRow.updated_at) : "null",
+        Cell: ({ row }) =>
+          row.getValue("updated_at") !== "null"
+            ? dateFormater(new Date(row.getValue("updated_at")))
+            : "N/A",
+      },
+      {
+        accessorKey: "id",
+        header: "",
+        enableHiding: false,
+        enableColumnFilter: false,
+        enableSorting: false,
+        Cell: ({ row }) => (
+          <div className="flex">
+            <Link
+              href={`/products/categories/${row.getValue("id")}`}
+              className={cn(buttonVariants({ variant: "ghost" }))}
+            >
+              <PencilLine className="h-4 w-4" />
+            </Link>
+            <ConfirmDelete
+              className="flex aspect-square h-10 w-10 items-center justify-center rounded-md hover:bg-red-100 hover:text-red-500"
+              confirmText={row.getValue("name")}
+              deleteFn={() => handleDeleteCategory(row.getValue("id"))}
+            >
+              <Trash2 className="h-4 w-4" />
+            </ConfirmDelete>
+          </div>
+        ),
+      },
+    ],
+    [categories]
+  );
+  const table = useMaterialReactTable({
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-    },
-  });
-
-  return isLoading ? (
-    <DataTableSkeleton columnCount={columns.length} />
-  ) : (
-    <div className="flex w-full flex-col gap-4">
-      <DataTableToolbar
-        table={table}
-        searchUsing="name"
-        actionNodes={
-          <Link
-            href="/products/categories/create"
-            className={cn(
-              buttonVariants({ variant: "secondary" }),
-              "gap-2 hover:bg-fuchsia-100 hover:text-fuchsia-700"
-            )}
+    data: categories || [],
+    muiTablePaperProps: ({ table }) => ({
+      elevation: 0,
+      style: {
+        zIndex: table.getState().isFullScreen ? 1000 : undefined,
+      },
+    }),
+    renderTopToolbarCustomActions: ({ table }) => (
+      <div className="flex gap-2">
+        {me?.role === "superadmin" ? (
+          <>
+            <Button
+              onClick={handleExportData}
+              className="max-md:hidden"
+              startIcon={<FileDownload />}
+              sx={{
+                "@media (max-width: 768px)": {
+                  display: "none",
+                },
+              }}
+            >
+              Export All Data
+            </Button>
+            <Button
+              disabled={
+                !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+              }
+              onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+              startIcon={<FileDownload />}
+              sx={{
+                "@media (max-width: 768px)": {
+                  display: "none",
+                },
+              }}
+            >
+              Export Selected Rows
+            </Button>
+            <Tooltip
+              sx={{
+                "display": "none",
+                "@media (max-width: 768px)": {
+                  display: "block",
+                },
+                "height": "40px",
+              }}
+              arrow
+              title="Export All Data"
+            >
+              <IconButton onClick={() => handleExportData()}>
+                <FileDownload className="-translate-y-2" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip
+              sx={{
+                "display": "none",
+                "@media (max-width: 768px)": {
+                  display: "block",
+                },
+                "height": "40px",
+              }}
+              arrow
+              title="Export Selected Rows"
+            >
+              <IconButton
+                disabled={
+                  !table.getIsSomeRowsSelected() &&
+                  !table.getIsAllRowsSelected()
+                }
+                onClick={() =>
+                  handleExportRows(table.getSelectedRowModel().rows)
+                }
+              >
+                <FileDownload className="-translate-y-2" />
+              </IconButton>
+            </Tooltip>
+          </>
+        ) : null}
+        <Tooltip arrow title="Refresh Data">
+          <IconButton
+            sx={{
+              height: "40px",
+            }}
+            onClick={() => refetch()}
           >
-            <Plus className="h-4 w-4" />
-            <span>Create</span>
-          </Link>
-        }
-        refetch={refetch}
-      />
-      <DataTable table={table} columnSpan={columns.length} />
-      <DataTablePagination table={table} />
-    </div>
+            <Refresh />
+          </IconButton>
+        </Tooltip>
+      </div>
+    ),
+    state: {
+      showProgressBars: isRefetching,
+      isLoading,
+    },
+    enableRowSelection: me?.role === "superadmin",
+  });
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <MaterialReactTable table={table} />
+    </LocalizationProvider>
   );
 };
 
-export default CategoryTable;
+export default CategoriesTable;
