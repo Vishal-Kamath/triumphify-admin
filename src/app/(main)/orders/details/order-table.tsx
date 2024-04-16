@@ -1,205 +1,381 @@
 "use client";
 
-import { Order } from "@/@types/order";
-import DataTable from "@/components/data-table/data-table";
-import { DataTablePagination } from "@/components/data-table/data-table-pagination";
-import DataTableToolbar from "@/components/data-table/data-table-toolbar";
-import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
-import { buttonVariants } from "@/components/ui/button";
-import { useOrders } from "@/lib/orders";
-import { cn } from "@/lib/utils";
-import { dateFormater } from "@/utils/dateFormater";
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { ExternalLink, PencilLine } from "lucide-react";
+  MRT_ColumnDef,
+  MRT_Row,
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
+import { FC, useMemo } from "react";
+import { dateFormater } from "@/utils/dateFormater";
+import { Button, IconButton, Tooltip } from "@mui/material";
+import { FileDownload, Refresh } from "@mui/icons-material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useMe } from "@/lib/auth";
+import { handleExtract } from "@/utils/extract";
+import { useProducts } from "@/lib/products";
+import { Product } from "@/@types/product";
 import Image from "next/image";
+import { useOrders } from "@/lib/orders";
+import { Order } from "@/@types/order";
 import Link from "next/link";
-import { FC, useState } from "react";
-import { RxCaretSort } from "react-icons/rx";
-import DataTableExtract from "@/components/data-table/data-table-extract";
-import { DataTableFacetedFilter } from "@/components/data-table/data-table-faceted-filter";
+import { ExternalLink, PencilLine } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+import { capitalize } from "lodash";
 
-const columns: ColumnDef<Order>[] = [
-  {
-    header: ({ column }) => {
-      return (
-        <button
-          className="flex items-center gap-2 border-none bg-transparent p-0 outline-none focus:outline-none"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Product Name
-          <RxCaretSort className="ml-2 h-4 w-4" />
-        </button>
-      );
-    },
-    accessorKey: "product_name",
-    id: "Product Name",
-    cell: ({ row }) => (
-      <div className="flex gap-3 min-w-[15rem] items-center">
-        <Image
-          src={row.original.product_image || ""}
-          alt={row.original.product_name}
-          className="size-14 object-contain flex-shrink-0"
-          width={200}
-          height={200}
-        />
-        <div className="flex flex-col gap-1">
-          <h3>{row.original.product_name}</h3>
+const OrdersTable: FC = () => {
+  const { data: orders, isLoading, refetch, isRefetching } = useOrders();
+  const { data: me } = useMe();
+
+  const handleExportRows = (rows: MRT_Row<Order>[]) => {
+    const rowData = rows.map((row) => row.original);
+    handleExtract("orders-data", rowData);
+  };
+
+  const handleExportData = () => {
+    if (!orders) return;
+    handleExtract("orders-data", orders);
+  };
+
+  const columns = useMemo<MRT_ColumnDef<Order>[]>(
+    () => [
+      {
+        header: "Product",
+        accessorKey: "product_name",
+        Cell: ({ row }) => (
+          <div className="flex gap-3 min-w-[15rem] items-center">
+            <Image
+              src={row.original.product_image || ""}
+              alt={row.original.product_name}
+              className="size-14 object-contain flex-shrink-0"
+              width={200}
+              height={200}
+            />
+            <div className="flex flex-col gap-1">
+              <h3>{row.original.product_name}</h3>
+              <Link
+                href={`/products/details/${row.original.product_id}?redirect=${encodeURIComponent("/orders/details")}`}
+                className="text-xs flex gap-1 text-slate-500 hover:underline hover:text-slate-800"
+              >
+                <span>View Product</span>
+                <ExternalLink className="size-3" />
+              </Link>
+            </div>
+          </div>
+        ),
+        enableHiding: false,
+      },
+      {
+        header: "Quantity",
+        id: "Quantity",
+        accessorKey: "product_quantity",
+        filterVariant: "range-slider",
+        filterFn: "betweenInclusive",
+        muiFilterSliderProps: ({ table }) => {
+          let min = 0;
+          let max = 0;
+          table.getCoreRowModel().rows.forEach((row) => {
+            if (Math.floor(row.original.product_quantity) < min)
+              min = Math.floor(row.original.product_quantity);
+            if (Math.ceil(row.original.product_quantity) > max)
+              max = Math.ceil(row.original.product_quantity);
+          });
+
+          return {
+            marks: true,
+            min,
+            max,
+          };
+        },
+        accessorFn: (originalRow) => Number(originalRow.product_quantity),
+      },
+      {
+        header: "Product Price",
+        id: "Product Price",
+        accessorKey: "product_variation_price",
+        filterVariant: "range-slider",
+        filterFn: "betweenInclusive",
+        muiFilterSliderProps: ({ table }) => {
+          let min = 0;
+          let max = 0;
+          table.getCoreRowModel().rows.forEach((row) => {
+            if (Math.floor(row.original.product_variation_price) < min)
+              min = Math.floor(row.original.product_variation_price);
+            if (Math.ceil(row.original.product_variation_price) > max)
+              max = Math.ceil(row.original.product_variation_price);
+          });
+
+          return {
+            marks: true,
+            min,
+            max,
+            valueLabelFormat: (value) =>
+              value.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              }),
+          };
+        },
+        accessorFn: (originalRow) =>
+          Number(originalRow.product_variation_price),
+        Cell: ({ cell }) =>
+          cell.getValue<number>().toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+          }),
+      },
+      {
+        header: "Discount",
+        id: "Discount",
+        accessorKey: "product_variation_discount_final_price",
+        filterVariant: "range-slider",
+        filterFn: "betweenInclusive",
+        muiFilterSliderProps: ({ table }) => {
+          let min = 0;
+          let max = 0;
+          table.getCoreRowModel().rows.forEach((row) => {
+            if (
+              Math.floor(row.original.product_variation_discount_final_price) <
+              min
+            )
+              min = Math.floor(
+                row.original.product_variation_discount_final_price
+              );
+            if (
+              Math.ceil(row.original.product_variation_discount_final_price) >
+              max
+            )
+              max = Math.ceil(
+                row.original.product_variation_discount_final_price
+              );
+          });
+
+          return {
+            marks: true,
+            min,
+            max,
+            valueLabelFormat: (value) =>
+              value.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              }),
+          };
+        },
+        accessorFn: (originalRow) =>
+          Number(originalRow.product_variation_discount_final_price),
+        Cell: ({ cell }) =>
+          cell.getValue<number>().toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+          }),
+      },
+      {
+        header: "Total Price",
+        id: "Total Price",
+        accessorKey: "product_variation_final_price",
+        filterVariant: "range-slider",
+        filterFn: "betweenInclusive",
+        muiFilterSliderProps: ({ table }) => {
+          let min = 0;
+          let max = 0;
+          table.getCoreRowModel().rows.forEach((row) => {
+            if (Math.floor(row.original.product_variation_final_price) < min)
+              min = Math.floor(row.original.product_variation_final_price);
+            if (Math.ceil(row.original.product_variation_final_price) > max)
+              max = Math.ceil(row.original.product_variation_final_price);
+          });
+
+          return {
+            marks: true,
+            min,
+            max,
+            valueLabelFormat: (value) =>
+              value.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              }),
+          };
+        },
+        accessorFn: (originalRow) =>
+          Number(originalRow.product_variation_final_price),
+        Cell: ({ cell }) =>
+          cell.getValue<number>().toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+          }),
+      },
+      {
+        header: "Status",
+        id: "Status",
+        accessorKey: "status",
+        filterVariant: "select",
+        filterSelectOptions: [
+          "pending",
+          "confirmed",
+          "out for delivery",
+          "delivered",
+          "return approved",
+          "out for pickup",
+          "picked up",
+          "refunded",
+          "cancelled",
+        ].map((status) => ({
+          label: capitalize(status),
+          value: status,
+        })),
+        accessorFn: (originalRow) =>
+          originalRow.cancelled ? "cancelled" : originalRow.status,
+        Cell: ({ row }) =>
+          row.original.cancelled ? (
+            <span className="text-xs text-nowrap capitalize px-2 py-1 border-1 border-red-500 rounded-full text-red-800 bg-red-50">
+              Cancelled
+            </span>
+          ) : (
+            <span className="text-xs text-nowrap capitalize px-2 py-1 border-1 border-neutral-500 rounded-full text-neutral-800 bg-neutral-50">
+              {row.original.status}
+            </span>
+          ),
+      },
+      {
+        header: "Created At",
+        accessorKey: "created_at",
+        filterVariant: "date-range",
+        accessorFn: (originalRow) => new Date(originalRow.created_at),
+        Cell: ({ row }) => dateFormater(new Date(row.getValue("created_at"))),
+      },
+      {
+        header: "Updated At",
+        accessorKey: "updated_at",
+        filterVariant: "date-range",
+        accessorFn: (originalRow) =>
+          originalRow.updated_at ? new Date(originalRow.updated_at) : "null",
+        Cell: ({ row }) =>
+          row.getValue("updated_at") !== "null"
+            ? dateFormater(new Date(row.getValue("updated_at")))
+            : "N/A",
+      },
+      {
+        accessorKey: "id",
+        header: "",
+        enableHiding: false,
+        enableColumnFilter: false,
+        enableSorting: false,
+        Cell: ({ row }) => (
           <Link
-            href={`/products/details/${row.original.product_id}?redirect=${encodeURIComponent("/orders/details")}`}
-            className="text-xs flex gap-1 text-slate-500 hover:underline hover:text-slate-800"
+            href={`/orders/details/${row.getValue("id")}`}
+            className={cn(buttonVariants({ variant: "ghost" }))}
           >
-            <span>View Product</span>
-            <ExternalLink className="size-3" />
+            <PencilLine className="h-4 w-4" />
           </Link>
-        </div>
-      </div>
-    ),
-    enableHiding: false,
-    enableSorting: true,
-  },
-  {
-    header: "Product Price",
-    id: "Product Price",
-    accessorKey: "product_variation_price",
-  },
-  {
-    header: "Quantity",
-    id: "Quantity",
-    accessorKey: "product_quantity",
-  },
-  {
-    header: "Discount",
-    id: "Discount",
-    accessorKey: "product_variation_discount_final_price",
-  },
-  {
-    header: "Total Price",
-    id: "Total Price",
-    accessorKey: "product_variation_final_price",
-  },
-  {
-    header: "Status",
-    id: "Status",
-    accessorKey: "status",
-    cell: ({ row }) =>
-      row.original.cancelled ? (
-        <span className="text-xs text-nowrap capitalize px-2 py-1 border-1 border-red-500 rounded-full text-red-800 bg-red-50">
-          Cancelled
-        </span>
-      ) : (
-        <span className="text-xs text-nowrap capitalize px-2 py-1 border-1 border-neutral-500 rounded-full text-neutral-800 bg-neutral-50">
-          {row.original.status}
-        </span>
-      ),
-  },
-  {
-    header: "Created At",
-    id: "Created At",
-    accessorKey: "created_at",
-    cell: ({ row }) => dateFormater(new Date(row.original.created_at)),
-  },
-  {
-    header: "Updated At",
-    id: "Updated At",
-    accessorKey: "updated_at",
-    cell: ({ row }) =>
-      row.original.updated_at
-        ? dateFormater(new Date(row.original.updated_at))
-        : "N/A",
-  },
-  {
-    accessorKey: "id",
-    header: "",
-    enableHiding: false,
-    enableSorting: false,
-    cell: ({ row }) => (
-      <div className="flex">
-        <Link
-          href={`/orders/details/${row.getValue("id")}`}
-          className={cn(buttonVariants({ variant: "ghost" }))}
-        >
-          <PencilLine className="h-4 w-4" />
-        </Link>
-      </div>
-    ),
-  },
-];
-
-const OrderTable: FC = () => {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
-  const { data: orders, isLoading, refetch } = useOrders();
-
-  const [cancelled, setCancelled] = useState(false);
-
-  const table = useReactTable({
-    data: orders || [],
+        ),
+      },
+    ],
+    [orders]
+  );
+  const table = useMaterialReactTable({
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-    },
-  });
-
-  return isLoading ? (
-    <DataTableSkeleton columnCount={columns.length} />
-  ) : (
-    <div className="flex w-full flex-col gap-4">
-      <DataTableToolbar
-        table={table}
-        searchUsing="Product Name"
-        dataTableExtract={
-          <DataTableExtract data={orders || []} name="orders" />
-        }
-        refetch={refetch}
-      />
-      <div className="flex justify-between">
-        <DataTableFacetedFilter
-          column={table.getColumn("Status")}
-          options={[
-            "pending",
-            "confirmed",
-            "out for delivery",
-            "delivered",
-            "return approved",
-            "out for pickup",
-            "picked up",
-            "refunded",
-          ].map((status) => ({
-            label: status[0].toUpperCase() + status.slice(1),
-            value: status,
-          }))}
-          title="Status"
-        />
+    data: orders || [],
+    muiTablePaperProps: ({ table }) => ({
+      elevation: 0,
+      style: {
+        zIndex: table.getState().isFullScreen ? 1000 : undefined,
+      },
+    }),
+    renderTopToolbarCustomActions: ({ table }) => (
+      <div className="flex gap-2">
+        {me?.role === "superadmin" ? (
+          <>
+            <Button
+              onClick={handleExportData}
+              className="max-md:hidden"
+              startIcon={<FileDownload />}
+              sx={{
+                "@media (max-width: 768px)": {
+                  display: "none",
+                },
+              }}
+            >
+              Export All Data
+            </Button>
+            <Button
+              disabled={
+                !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+              }
+              onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+              startIcon={<FileDownload />}
+              sx={{
+                "@media (max-width: 768px)": {
+                  display: "none",
+                },
+              }}
+            >
+              Export Selected Rows
+            </Button>
+            <Tooltip
+              sx={{
+                "display": "none",
+                "@media (max-width: 768px)": {
+                  display: "block",
+                },
+                "height": "40px",
+              }}
+              arrow
+              title="Export All Data"
+            >
+              <IconButton onClick={() => handleExportData()}>
+                <FileDownload className="-translate-y-2" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip
+              sx={{
+                "display": "none",
+                "@media (max-width: 768px)": {
+                  display: "block",
+                },
+                "height": "40px",
+              }}
+              arrow
+              title="Export Selected Rows"
+            >
+              <IconButton
+                disabled={
+                  !table.getIsSomeRowsSelected() &&
+                  !table.getIsAllRowsSelected()
+                }
+                onClick={() =>
+                  handleExportRows(table.getSelectedRowModel().rows)
+                }
+              >
+                <FileDownload className="-translate-y-2" />
+              </IconButton>
+            </Tooltip>
+          </>
+        ) : null}
+        <Tooltip arrow title="Refresh Data">
+          <IconButton
+            sx={{
+              height: "40px",
+            }}
+            onClick={() => refetch()}
+          >
+            <Refresh />
+          </IconButton>
+        </Tooltip>
       </div>
-      <DataTable table={table} columnSpan={columns.length} />
-      <DataTablePagination table={table} />
-    </div>
+    ),
+    state: {
+      showProgressBars: isRefetching,
+      isLoading,
+    },
+    enableRowSelection: me?.role === "superadmin",
+  });
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <MaterialReactTable table={table} />
+    </LocalizationProvider>
   );
 };
 
-export default OrderTable;
+export default OrdersTable;
