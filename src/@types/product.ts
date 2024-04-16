@@ -17,6 +17,9 @@ export interface Product {
   meta_title: string;
   meta_description: string;
   meta_keywords: string;
+
+  created_at: Date;
+  updated_at: Date | null;
 }
 
 export interface ProductDetails extends Product {
