@@ -3,6 +3,8 @@ export interface Order {
   user_id: string;
   group_id: string;
 
+  notifications: number;
+
   product_id: string;
   product_name: string;
   product_slug: string;

@@ -6,7 +6,7 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo, useRef } from "react";
 import { dateFormater } from "@/utils/dateFormater";
 import { Button, IconButton, Tooltip } from "@mui/material";
 import { FileDownload, Refresh } from "@mui/icons-material";
@@ -14,8 +14,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useMe } from "@/lib/auth";
 import { handleExtract } from "@/utils/extract";
-import { useProducts } from "@/lib/products";
-import { Product } from "@/@types/product";
 import Image from "next/image";
 import { useOrders } from "@/lib/orders";
 import { Order } from "@/@types/order";
@@ -24,10 +22,29 @@ import { ExternalLink, PencilLine } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { capitalize } from "lodash";
+import { useNav } from "@/lib/nav";
 
 const OrdersTable: FC = () => {
   const { data: orders, isLoading, refetch, isRefetching } = useOrders();
+  const { data: nav, isLoading: isNavLoading } = useNav();
   const { data: me } = useMe();
+
+  const orderNav = useRef(0);
+  const ticketNav = useRef(0);
+  const navString = JSON.stringify(nav);
+  useEffect(() => {
+    if (!isNavLoading && nav) {
+      const { orders, tickets } = nav;
+      if (
+        Number(orders) !== orderNav.current ||
+        Number(tickets) !== ticketNav.current
+      ) {
+        orderNav.current = Number(orders);
+        ticketNav.current = Number(tickets);
+        refetch();
+      }
+    }
+  }, [navString]);
 
   const handleExportRows = (rows: MRT_Row<Order>[]) => {
     const rowData = rows.map((row) => row.original);
@@ -281,6 +298,11 @@ const OrdersTable: FC = () => {
       elevation: 0,
       style: {
         zIndex: table.getState().isFullScreen ? 1000 : undefined,
+      },
+    }),
+    muiTableBodyRowProps: ({ row }) => ({
+      sx: {
+        backgroundColor: row.original.notifications ? "#fde68a" : null,
       },
     }),
     renderTopToolbarCustomActions: ({ table }) => (
