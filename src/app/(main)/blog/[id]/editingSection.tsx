@@ -68,6 +68,7 @@ const BlogEditingSection: FC = () => {
                     lastModified: file.lastModified,
                     size: file.size,
                     type: file.type,
+                    nonCloseable: element.content.nonCloseable,
                   },
                 }
               : element,
