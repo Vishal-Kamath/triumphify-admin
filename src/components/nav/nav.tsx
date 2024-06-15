@@ -20,6 +20,8 @@ import {
   UserSearch,
   Ticket,
   ActivitySquare,
+  NotebookText,
+  NotebookPen,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -170,6 +172,21 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
           label: "Sub Banner",
           href: "/banners/sub",
           icon: ImageLucide,
+        },
+      ],
+    },
+    {
+      label: "Blog",
+      elements: [
+        {
+          label: "Posts",
+          href: "/blog/posts",
+          icon: NotebookText,
+        },
+        {
+          label: "Write",
+          href: "/blog/write",
+          icon: NotebookPen,
         },
       ],
     },

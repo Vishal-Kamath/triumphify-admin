@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ReactQueryProvider>
-        <body className={cn(inter.className, "min-h-screen h-full")}>
+        <body className={cn(inter.className, "h-full min-h-screen")}>
           <RedirectProvider>
             <TimeLogProvider>{children}</TimeLogProvider>
           </RedirectProvider>
