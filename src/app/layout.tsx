@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import ReactQueryProvider from "@/components/providers/reactquery.provider";
 import { Toaster } from "@/components/ui/toaster";
-import { cn } from "@/lib/utils";
 import TimeLogProvider from "@/components/providers/time.log.provider";
 import RedirectProvider from "@/components/providers/redirect.provider";
-
-const inter = Inter({ subsets: ["latin"] });
+import FullScreenProvider from "@/components/providers/fullscreen.provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,12 +19,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ReactQueryProvider>
-        <body className={cn(inter.className, "h-full min-h-screen")}>
+        <FullScreenProvider>
           <RedirectProvider>
             <TimeLogProvider>{children}</TimeLogProvider>
           </RedirectProvider>
           <Toaster />
-        </body>
+        </FullScreenProvider>
       </ReactQueryProvider>
     </html>
   );
