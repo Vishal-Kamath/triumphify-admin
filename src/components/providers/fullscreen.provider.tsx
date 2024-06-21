@@ -11,12 +11,12 @@ const FullScreenProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     function fullscreenHandler(event: KeyboardEvent) {
-      if (event.key === "f") {
-        bodyRef.current?.requestFullscreen();
-      }
-      if (event.key === "Escape") {
-        document.exitFullscreen();
-      }
+      // if (event.key === "f") {
+      //   bodyRef.current?.requestFullscreen();
+      // }
+      // if (event.key === "Escape") {
+      //   document.exitFullscreen();
+      // }
     }
     document.addEventListener("keydown", fullscreenHandler);
 
