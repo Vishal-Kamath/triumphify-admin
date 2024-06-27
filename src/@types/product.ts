@@ -13,6 +13,7 @@ export interface Product {
     description: string;
   }[];
   product_images: string[];
+  linked_to_main_banner?: boolean;
 
   meta_title: string;
   meta_description: string;

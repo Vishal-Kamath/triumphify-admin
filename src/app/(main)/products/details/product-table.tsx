@@ -18,6 +18,7 @@ import { useProducts } from "@/lib/products";
 import { Product } from "@/@types/product";
 import Image from "next/image";
 import ProductMoreDropdown from "./more-dropdown";
+import ProductTableLinkUnlinkDropdown from "./link.unlink.dropdown";
 
 const ProductsTable: FC = () => {
   const { data: products, isLoading, refetch, isRefetching } = useProducts();
@@ -43,7 +44,7 @@ const ProductsTable: FC = () => {
             <Image
               src={(row.getValue("product_images") as string[])[0]}
               alt={row.getValue("name")}
-              className="w-full min-h-24 h-full max-w-[10rem]"
+              className="h-full min-h-24 w-full max-w-[10rem]"
               width={200}
               height={200}
             />
@@ -66,9 +67,21 @@ const ProductsTable: FC = () => {
         accessorKey: "description",
         Cell(props) {
           return (
-            <div className="text-wrap max-h-28 overflow-y-auto min-w-[300px] max-w-[300px] scrollbar-thin">
+            <div className="max-h-28 min-w-[300px] max-w-[300px] overflow-y-auto text-wrap scrollbar-thin">
               {props.row.getValue("description")}
             </div>
+          );
+        },
+      },
+      {
+        header: "Linked",
+        accessorKey: "linked_to_main_banner",
+        Cell: ({ row }) => {
+          return (
+            <ProductTableLinkUnlinkDropdown
+              id={row.original.id}
+              linked={row.original.linked_to_main_banner}
+            />
           );
         },
       },
@@ -113,7 +126,7 @@ const ProductsTable: FC = () => {
         ),
       },
     ],
-    [products]
+    [products],
   );
   const table = useMaterialReactTable({
     columns,
@@ -156,11 +169,11 @@ const ProductsTable: FC = () => {
             </Button>
             <Tooltip
               sx={{
-                "display": "none",
+                display: "none",
                 "@media (max-width: 768px)": {
                   display: "block",
                 },
-                "height": "40px",
+                height: "40px",
               }}
               arrow
               title="Export All Data"
@@ -171,11 +184,11 @@ const ProductsTable: FC = () => {
             </Tooltip>
             <Tooltip
               sx={{
-                "display": "none",
+                display: "none",
                 "@media (max-width: 768px)": {
                   display: "block",
                 },
-                "height": "40px",
+                height: "40px",
               }}
               arrow
               title="Export Selected Rows"

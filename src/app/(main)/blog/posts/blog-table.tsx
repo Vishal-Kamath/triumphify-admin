@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import ConfirmDelete from "@/components/misc/confirmDelete";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
+import ProductTableLinkUnlinkDropdown from "./link.unlink.dropdown";
 
 const DeleteBlogButton: FC<{ id: string; title: string }> = ({ id, title }) => {
   const { toast } = useToast();
@@ -144,6 +145,18 @@ const BlogsTable: FC = () => {
       //     );
       //   },
       // },
+      {
+        header: "Linked",
+        accessorKey: "linked_to_main_banner",
+        Cell: ({ row }) => {
+          return (
+            <ProductTableLinkUnlinkDropdown
+              id={row.original.id}
+              linked={row.original.linked_to_main_banner}
+            />
+          );
+        },
+      },
       {
         header: "Created by",
         accessorKey: "created_by",

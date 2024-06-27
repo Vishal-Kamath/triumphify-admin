@@ -65,6 +65,7 @@ interface Blog {
   image: string;
   title: string;
   status: "draft";
+  linked_to_main_banner?: boolean;
   created_by: string;
   created_at: Date;
   updated_at: Date | null;
