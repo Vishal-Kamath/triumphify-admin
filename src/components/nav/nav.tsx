@@ -105,12 +105,12 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
           icon: Ticket,
           notification: nav?.tickets,
         },
-        {
-          label: "Contacts",
-          type: "element",
-          href: "/users/contacts",
-          icon: Contact,
-        },
+        // {
+        //   label: "Contacts",
+        //   type: "element",
+        //   href: "/users/contacts",
+        //   icon: Contact,
+        // },
         {
           href: "/users/messages",
           label: "Messages",
