@@ -1,18 +1,30 @@
 import { ChangeEvent, FC } from "react";
 import BlogTextSettings from "./text-settings";
+import AutoResizingTextarea from "@/components/ui/auto-resize-textarea";
+import { cn } from "@/lib/utils";
+
+const textStyles = {
+  title: "text-4xl pb-2 pt-6",
+  h1: "text-3xl pt-4",
+  h2: "text-2xl pt-3",
+  text: "text-xl pt-2",
+};
 
 const BlogText: FC<{
   value: string;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  type: "title" | "h1" | "h2" | "text";
+  onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   changeTextType: (type: "h1" | "h2" | "text") => void;
   deleteSection: () => void;
-}> = ({ value, onChange, changeTextType, deleteSection }) => {
+}> = ({ value, type, onChange, changeTextType, deleteSection }) => {
   return (
     <div className="group relative w-full">
-      <input
-        type="text"
+      <AutoResizingTextarea
         placeholder="Tell us more..."
-        className="w-full border-none pt-2 font-serif text-xl font-medium outline-none"
+        className={cn(
+          "w-full border-none font-serif font-medium outline-none",
+          textStyles[type],
+        )}
         value={value}
         onChange={onChange}
       />

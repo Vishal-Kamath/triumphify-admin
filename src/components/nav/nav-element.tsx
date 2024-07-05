@@ -1,14 +1,14 @@
 "use client";
 
 import { Dispatch, FC, SetStateAction, useEffect } from "react";
-import { NavElementType } from "./nav";
+import { NavElementType, NavFCElementType } from "./nav";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { usePrivilage } from "@/lib/privilage";
 
 const NavElement: FC<{
-  navElement: NavElementType;
+  navElement: NavElementType | NavFCElementType;
   setOpen: (open: boolean) => void;
   setIsHiddenList: Dispatch<SetStateAction<string[]>>;
 }> = ({ navElement, setOpen, setIsHiddenList }) => {
@@ -46,32 +46,39 @@ const NavElement: FC<{
   if (isLoading) return null;
 
   return access ? (
-    <Link
-      href={navElement.href}
-      onClick={preventDefault}
-      className={cn(
-        "flex h-10 items-center gap-3 rounded-md px-2",
-        pathname.startsWith(navElement.href)
-          ? "bg-blue-50 text-blue-700"
-          : "hover:bg-slate-100",
-      )}
-    >
-      <navElement.icon
-        className={cn(
-          "h-5 w-5",
-          pathname.startsWith(navElement.href)
-            ? "text-blue-700"
-            : "text-slate-500",
-        )}
+    navElement.type === "FC" ? (
+      <navElement.element
+        href={navElement.href}
+        preventDefault={preventDefault}
       />
-      <span>{navElement.label}</span>
+    ) : (
+      <Link
+        href={navElement.href}
+        onClick={preventDefault}
+        className={cn(
+          "flex h-10 items-center gap-3 rounded-md px-2",
+          pathname.startsWith(navElement.href)
+            ? "bg-blue-50 text-blue-700"
+            : "hover:bg-slate-100",
+        )}
+      >
+        <navElement.icon
+          className={cn(
+            "h-5 w-5",
+            pathname.startsWith(navElement.href)
+              ? "text-blue-700"
+              : "text-slate-500",
+          )}
+        />
+        <span>{navElement.label}</span>
 
-      {navElement.notification ? (
-        <span className="ml-auto rounded-full bg-gradient-to-br from-blue-600 to-blue-700 px-2 text-xs font-semibold leading-4 text-white">
-          {navElement.notification}
-        </span>
-      ) : null}
-    </Link>
+        {navElement.notification ? (
+          <span className="ml-auto rounded-full bg-gradient-to-br from-blue-600 to-blue-700 px-2 text-xs font-semibold leading-4 text-white">
+            {navElement.notification}
+          </span>
+        ) : null}
+      </Link>
+    )
   ) : null;
 };
 

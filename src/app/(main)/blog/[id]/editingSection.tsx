@@ -4,9 +4,6 @@ import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import BlogImage from "../components/image";
 import { v4 as uuid } from "uuid";
-import BlogTitle from "../components/title";
-import BlogHeading1 from "../components/heading1";
-import BlogHeading2 from "../components/heading2";
 import BlogText from "../components/text";
 import { Separator } from "@/components/ui/separator";
 import { Heading1, Heading2, Image, Type } from "lucide-react";
@@ -88,30 +85,21 @@ const BlogEditingSection: FC = () => {
     );
   };
 
-  // title
-  const titleOnChange = (id: string) => (e: ChangeEvent<HTMLInputElement>) => {
-    setBlog((prev) =>
-      prev.map((element) =>
-        element.id === id && element.type === "title"
-          ? { ...element, content: { value: e.target.value } }
-          : element,
-      ),
-    );
-  };
-
   // text
-  const textOnChange = (id: string) => (e: ChangeEvent<HTMLInputElement>) => {
-    setBlog((prev) =>
-      prev.map((element) =>
-        element.id === id &&
-        (element.type === "text" ||
-          element.type === "h1" ||
-          element.type === "h2")
-          ? { ...element, content: { value: e.target.value } }
-          : element,
-      ),
-    );
-  };
+  const textOnChange =
+    (id: string) => (e: ChangeEvent<HTMLTextAreaElement>) => {
+      setBlog((prev) =>
+        prev.map((element) =>
+          element.id === id &&
+          (element.type === "text" ||
+            element.type === "h1" ||
+            element.type === "h2" ||
+            element.type === "title")
+            ? { ...element, content: { value: e.target.value } }
+            : element,
+        ),
+      );
+    };
 
   const addBlogSection = (type: "image" | "h1" | "h2" | "text") => {
     const newSection: BlogSection =
@@ -285,37 +273,13 @@ const BlogEditingSection: FC = () => {
               />
             );
           case "title":
-            return (
-              <BlogTitle
-                key={blogElement.id}
-                value={blogElement.content.value}
-                onChange={titleOnChange(blogElement.id)}
-              />
-            );
           case "h1":
-            return (
-              <BlogHeading1
-                key={blogElement.id}
-                value={blogElement.content.value}
-                onChange={textOnChange(blogElement.id)}
-                changeTextType={changeTextType(blogElement.id)}
-                deleteSection={deleteSection(blogElement.id)}
-              />
-            );
           case "h2":
-            return (
-              <BlogHeading2
-                key={blogElement.id}
-                value={blogElement.content.value}
-                onChange={textOnChange(blogElement.id)}
-                changeTextType={changeTextType(blogElement.id)}
-                deleteSection={deleteSection(blogElement.id)}
-              />
-            );
           case "text":
             return (
               <BlogText
                 key={blogElement.id}
+                type={blogElement.type}
                 value={blogElement.content.value}
                 onChange={textOnChange(blogElement.id)}
                 changeTextType={changeTextType(blogElement.id)}

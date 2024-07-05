@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import ReactQueryProvider from "@/components/providers/reactquery.provider";
 import { Toaster } from "@/components/ui/toaster";
-import TimeLogProvider from "@/components/providers/time.log.provider";
-import RedirectProvider from "@/components/providers/redirect.provider";
-import FullScreenProvider from "@/components/providers/fullscreen.provider";
+import AdminProviders from "@/components/providers/index.admin.providers";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,14 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ReactQueryProvider>
-        <FullScreenProvider>
-          <RedirectProvider>
-            <TimeLogProvider>{children}</TimeLogProvider>
-          </RedirectProvider>
-          <Toaster />
-        </FullScreenProvider>
-      </ReactQueryProvider>
+      <AdminProviders>
+        {children}
+        <Toaster />
+      </AdminProviders>
     </html>
   );
 }

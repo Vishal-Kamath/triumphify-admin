@@ -22,6 +22,7 @@ import {
   ActivitySquare,
   NotebookText,
   NotebookPen,
+  Contact,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -33,17 +34,31 @@ import { IoLogoGoogle } from "react-icons/io";
 import { MdOutlinePayments } from "react-icons/md";
 import { IconType } from "react-icons/lib";
 import { useNav } from "@/lib/nav";
+import NavMessages from "@/app/(main)/users/messages/messages-nav";
 
 export interface NavElementType {
   label: string;
   href: string;
   icon: LucideIcon | IconType;
   notification?: string;
+
+  type: "element";
+}
+
+export interface NavFCElementType {
+  label: string;
+  href: string;
+  element: FC<{
+    href: string;
+    preventDefault(e: React.MouseEvent): void;
+  }>;
+
+  type: "FC";
 }
 
 export interface NavSectionType {
   label?: string;
-  elements: NavElementType[];
+  elements: (NavElementType | NavFCElementType)[];
 }
 
 const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
@@ -55,6 +70,7 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
       elements: [
         {
           label: "Analytics",
+          type: "element",
           href: "/analytics",
           icon: BarChart3,
         },
@@ -65,25 +81,41 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
       elements: [
         {
           label: "Accounts",
+          type: "element",
           href: "/users/accounts",
           icon: Users,
         },
         {
           label: "Leads",
+          type: "element",
           href: "/users/leads",
           icon: UserSearch,
           notification: nav?.leads,
         },
         {
           label: "Stats",
+          type: "element",
           href: "/users/stats",
           icon: BarChart3,
         },
         {
           label: "Tickets",
+          type: "element",
           href: "/users/tickets",
           icon: Ticket,
           notification: nav?.tickets,
+        },
+        {
+          label: "Contacts",
+          type: "element",
+          href: "/users/contacts",
+          icon: Contact,
+        },
+        {
+          href: "/users/messages",
+          label: "Messages",
+          element: NavMessages,
+          type: "FC",
         },
       ],
     },
@@ -92,33 +124,39 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
       elements: [
         {
           label: "Details",
+          type: "element",
           href: "/employees/details",
           icon: Users,
         },
         {
           label: "Leads",
+          type: "element",
           href: "/employees/leads",
           icon: UserSearch,
           notification: nav?.leads,
         },
         {
           label: "Actions",
+          type: "element",
           href: "/employees/actions",
           icon: ActivitySquare,
         },
         {
           label: "Tickets",
+          type: "element",
           href: "/employees/tickets",
           icon: Ticket,
           notification: nav?.tickets,
         },
         {
           label: "Logs",
+          type: "element",
           href: "/employees/logs",
           icon: FileClock,
         },
         {
           label: "Create",
+          type: "element",
           href: "/employees/create",
           icon: UserPlus,
         },
@@ -129,21 +167,25 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
       elements: [
         {
           label: "Details",
+          type: "element",
           href: "/products/details",
           icon: PackageSearch,
         },
         {
           label: "Categories",
+          type: "element",
           href: "/products/categories",
           icon: Blocks,
         },
         {
           label: "Attibutes",
+          type: "element",
           href: "/products/attributes",
           icon: FileText,
         },
         {
           label: "Create",
+          type: "element",
           href: "/products/create",
           icon: PackagePlus,
         },
@@ -154,6 +196,7 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
       elements: [
         {
           label: "Details",
+          type: "element",
           href: "/orders/details",
           icon: FileSearch,
           notification: nav?.orders,
@@ -165,11 +208,13 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
       elements: [
         {
           label: "Main Banner",
+          type: "element",
           href: "/banners/main",
           icon: ImageLucide,
         },
         {
           label: "Sub Banner",
+          type: "element",
           href: "/banners/sub",
           icon: ImageLucide,
         },
@@ -180,11 +225,13 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
       elements: [
         {
           label: "Posts",
+          type: "element",
           href: "/blog/posts",
           icon: NotebookText,
         },
         {
           label: "Write",
+          type: "element",
           href: "/blog/write",
           icon: NotebookPen,
         },
@@ -195,11 +242,13 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
       elements: [
         {
           label: "Google Tag Manager",
+          type: "element",
           href: "/config/gtm",
           icon: IoLogoGoogle,
         },
         {
           label: "Payment",
+          type: "element",
           href: "/config/payment",
           icon: MdOutlinePayments,
         },
@@ -230,7 +279,7 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
         <nav
           className={cn(
             "fixed left-0 top-0 z-50 flex max-h-screen min-h-screen w-full max-w-[15rem] flex-shrink-0 flex-col overflow-y-auto border-r-1 border-slate-300 bg-white pb-24 pt-14 transition-all duration-200 ease-in-out scrollbar-none",
-            open ? "" : "max-lg:-translate-x-full"
+            open ? "" : "max-lg:-translate-x-full",
           )}
         >
           <UserAccount />
@@ -245,7 +294,7 @@ const NavBar: FC<{ children: ReactNode }> = ({ children }) => {
           onClick={() => setOpen(false)}
           className={cn(
             "fixed left-0 top-0 z-40 h-full min-h-screen w-full bg-slate-950/20 backdrop-blur-sm lg:hidden",
-            open ? "max-lg:block" : "hidden"
+            open ? "max-lg:block" : "hidden",
           )}
         ></div>
         {children}
