@@ -13,6 +13,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { AiOutlineLoading } from "react-icons/ai";
 import slugify from "slugify";
 import { invalidateAllBlogs, useBlog } from "@/lib/blogs";
+import BlogTitle from "../components/title";
 
 const BlogEditingSection: FC = () => {
   const { toast } = useToast();
@@ -273,6 +274,13 @@ const BlogEditingSection: FC = () => {
               />
             );
           case "title":
+            return (
+              <BlogTitle
+                key={blogElement.id}
+                value={blogElement.content.value}
+                onChange={textOnChange(blogElement.id)}
+              />
+            );
           case "h1":
           case "h2":
           case "text":

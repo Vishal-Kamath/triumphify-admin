@@ -4,7 +4,6 @@ import AutoResizingTextarea from "@/components/ui/auto-resize-textarea";
 import { cn } from "@/lib/utils";
 
 const textStyles = {
-  title: "text-4xl pb-2 pt-6",
   h1: "text-3xl pt-4",
   h2: "text-2xl pt-3",
   text: "text-xl pt-2",
@@ -12,7 +11,7 @@ const textStyles = {
 
 const BlogText: FC<{
   value: string;
-  type: "title" | "h1" | "h2" | "text";
+  type: "h1" | "h2" | "text";
   onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   changeTextType: (type: "h1" | "h2" | "text") => void;
   deleteSection: () => void;
@@ -29,7 +28,7 @@ const BlogText: FC<{
         onChange={onChange}
       />
       <BlogTextSettings
-        type="text"
+        type={type}
         changeTextType={changeTextType}
         deleteSection={deleteSection}
       />
