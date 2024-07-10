@@ -61,7 +61,7 @@ const SocketProvider: FC<{ children: ReactNode }> = ({ children }) => {
     if (isServer) return;
 
     if (!loggedIn.current && !unauthorized.current) {
-      socket.emit("login");
+      socket.emit("login-admin");
     }
 
     socket.on("loggedIn", () => {
@@ -88,7 +88,7 @@ const SocketProvider: FC<{ children: ReactNode }> = ({ children }) => {
       socket.connect();
 
       setTimeout(() => {
-        socket.emit("login");
+        socket.emit("login-admin");
         pingCount.current += 1;
       }, 1000);
     });
@@ -113,7 +113,7 @@ const SocketProvider: FC<{ children: ReactNode }> = ({ children }) => {
     socket.connect();
     unauthorized.current = false;
     loggedIn.current = false;
-    socket.emit("login");
+    socket.emit("login-admin");
   }
 
   function logout() {
