@@ -1,5 +1,6 @@
 "use client";
 
+import { isServer } from "@tanstack/react-query";
 import {
   FC,
   ReactNode,
@@ -26,16 +27,13 @@ const TimeLogProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const loggedIn = useRef(false);
   const loggedOut = useRef(true);
   const unauthorized = useRef(false);
-
-  const pingLogin = () => {
-    socket.emit("login");
-    if (unauthorized.current || loggedIn.current) return;
-    setTimeout(pingLogin, 1000);
-  };
+  const pingCount = useRef(0);
 
   useEffect(() => {
+    if (isServer) return;
+
     if (!loggedIn.current && !unauthorized.current) {
-      pingLogin();
+      socket.emit("login");
     }
 
     socket.on("loggedIn", () => {
@@ -49,7 +47,17 @@ const TimeLogProvider: FC<{ children: ReactNode }> = ({ children }) => {
       unauthorized.current = true;
     });
     socket.on("unauthorized", () => {
-      unauthorized.current = true;
+      if (pingCount.current > 10) {
+        unauthorized.current = true;
+        return;
+      }
+      socket.disconnect();
+      socket.connect();
+
+      setTimeout(() => {
+        socket.emit("login");
+        pingCount.current += 1;
+      }, 1000);
     });
 
     socket.on("time", (time: string) => {
@@ -64,18 +72,21 @@ const TimeLogProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
       loggedIn.current = false;
     };
-  }, []);
+  }, [isServer]);
 
   async function login() {
-    await socket.disconnect();
-    await socket.connect();
+    socket.disconnect();
+    socket.connect();
     unauthorized.current = false;
     loggedIn.current = false;
-    pingLogin();
+    socket.emit("login");
   }
 
   function logout() {
-    if (!loggedOut.current) socket.emit("logout");
+    if (!loggedOut.current) {
+      pingCount.current = 0;
+      socket.emit("logout");
+    }
   }
 
   return (

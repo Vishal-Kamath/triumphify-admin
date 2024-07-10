@@ -172,17 +172,15 @@ const ChatSection: FC<{
           )}
       </div>
 
-      <div className="flex h-fit w-full items-center gap-4 rounded-b-lg border-t-2 border-slate-300 bg-slate-100 px-4 py-2">
-        <AutoResizingTextarea
-          value={msg}
-          disabled={terminated}
-          onChange={(e) => setMsg(String.raw`${e.target.value}`)}
-          className="w-full border-none bg-transparent text-slate-800 outline-none"
-          placeholder={
-            terminated ? "This chat has been terminated" : "Message us here..."
-          }
-        />
-        {!terminated ? (
+      {!terminated ? (
+        <div className="flex h-fit w-full items-center gap-4 rounded-b-lg border-t-2 border-slate-300 bg-slate-100 px-4 py-2">
+          <AutoResizingTextarea
+            value={msg}
+            disabled={terminated}
+            onChange={(e) => setMsg(String.raw`${e.target.value}`)}
+            className="w-full border-none bg-transparent text-slate-800 outline-none"
+            placeholder="Message us here..."
+          />
           <button
             onClick={() =>
               newChat(msg, roomId, (newRoom: string) => {
@@ -194,8 +192,12 @@ const ChatSection: FC<{
           >
             <SendHorizonal className="size-4" />
           </button>
-        ) : null}
-      </div>
+        </div>
+      ) : (
+        <div className="flex h-fit w-full items-center justify-center gap-4 px-4 py-2">
+          <span className="text-slate-600">This chat has been terminated</span>
+        </div>
+      )}
     </div>
   );
 };
