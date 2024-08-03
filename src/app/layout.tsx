@@ -28,6 +28,34 @@ export const metadata: Metadata = {
     },
   ],
 
+  robots: {
+    index: false,
+    follow: false,
+    nositelinkssearchbox: true,
+    noimageindex: true,
+    "max-image-preview": "none",
+    "max-snippet": 0,
+    "max-video-preview": 0,
+    indexifembedded: false,
+    nosnippet: true,
+    noarchive: true,
+    nocache: true,
+
+    googleBot: {
+      index: false,
+      follow: false,
+      nositelinkssearchbox: true,
+      noimageindex: true,
+      "max-image-preview": "none",
+      "max-snippet": 0,
+      "max-video-preview": 0,
+      indexifembedded: false,
+      nosnippet: true,
+      noarchive: true,
+      nocache: true,
+    },
+  },
+
   // Favicons
   icons: {
     icon: [
